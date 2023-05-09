@@ -20,7 +20,7 @@
   "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
   "repository": "github:billyzkid/aimee-vutron",
   "license": "Unlicense",
-  "main": "dist/main/index.js",
+  "main": "./dist/main/index.js",
   "scripts": {
     "dev": "vite",
     "dev:debug": "vite --debug",
@@ -33,7 +33,8 @@
     "build": "electron-builder --config ./electron-builder.config.json",
     "build:mac": "npm run build -- --mac",
     "build:linux": "npm run build -- --linux",
-    "build:win": "npm run build -- --win"
+    "build:win": "npm run build -- --win",
+    "reset": "bash ./scripts/reset.sh"
   },
   "engines": {
     "node": ">=16.0.0"

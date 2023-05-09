@@ -1,6 +1,5 @@
 # https://git-scm.com/docs/gitignore
 
 # Ignored folders
-/build/dist/
 /dist/
 /node_modules/

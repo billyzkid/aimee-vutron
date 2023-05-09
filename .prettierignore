@@ -1,7 +1,6 @@
 # https://prettier.io/docs/en/ignore.html
 
 # Ignored folders
-/build/dist/
 /dist/
 /node_modules/
 

@@ -1,6 +1,5 @@
 # https://eslint.org/docs/latest/use/configure/ignore
 
 # Ignored folders
-/build/dist/
 /dist/
 /node_modules/

@@ -27,8 +27,7 @@ export default defineConfig(() => {
     publicDir: resolve("./src/renderer/public"),
     clearScreen: false,
     build: {
-      // assetsDir: "", // See: https://github.com/electron-vite/electron-vite-vue/issues/287
-      outDir: resolve("./dist")
+      outDir: resolve("./dist/input")
     },
     plugins: [
       vue(),
@@ -44,7 +43,7 @@ export default defineConfig(() => {
           vite: {
             build: {
               assetsDir: ".",
-              outDir: "./dist/main",
+              outDir: "./dist/input/main",
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
@@ -58,7 +57,7 @@ export default defineConfig(() => {
           },
           vite: {
             build: {
-              outDir: "./dist/preload"
+              outDir: "./dist/input/preload"
             }
           }
         }

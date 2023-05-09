@@ -20,7 +20,7 @@
   "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
   "repository": "github:billyzkid/aimee-vutron",
   "license": "Unlicense",
-  "main": "./dist/main/index.js",
+  "main": "./dist/input/main/index.js",
   "scripts": {
     "dev": "vite",
     "dev:debug": "vite --debug",

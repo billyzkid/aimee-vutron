@@ -30,7 +30,7 @@ export default defineConfig(() => {
     publicDir: resolve("./src/renderer/public"),
     clearScreen: false,
     build: {
-      assetsDir: "", // See: https://github.com/electron-vite/electron-vite-vue/issues/287
+      // assetsDir: "", // See: https://github.com/electron-vite/electron-vite-vue/issues/287
       outDir: resolve("./dist")
     },
     plugins: [
@@ -40,14 +40,14 @@ export default defineConfig(() => {
       eslintPlugin(),
       electronPlugin([
         {
-          entry: ["src/main/index.ts"],
+          entry: ["./src/main/index.ts"],
           onstart: (options) => {
             options.startup();
           },
           vite: {
             build: {
               assetsDir: ".",
-              outDir: "dist/main",
+              outDir: "./dist/main",
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
@@ -55,13 +55,13 @@ export default defineConfig(() => {
           }
         },
         {
-          entry: ["src/preload/index.ts"],
+          entry: ["./src/preload/index.ts"],
           onstart: (options) => {
             options.reload();
           },
           vite: {
             build: {
-              outDir: "dist/preload"
+              outDir: "./dist/preload"
             }
           }
         }

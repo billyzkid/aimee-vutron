@@ -24,20 +24,17 @@
   "scripts": {
     "dev": "vite",
     "dev:debug": "vite --debug",
-    "dev:force": "vite --force",
+    "deploy": "vite build",
+    "deploy:debug": "vite build --debug",
     "lint": "eslint . --ext .js,.ts,.vue",
     "lint:fix": "eslint . --ext .js,.ts,.vue --fix",
-    "format": "prettier . --check --loglevel=silent",
-    "format:fix": "prettier . --write --loglevel=silent",
-    "prebuild": "npm run lint && npm run format && vite build",
-    "build": "electron-builder --config ./electron-builder.config.json",
-    "build:mac": "npm run build -- --mac",
-    "build:linux": "npm run build -- --linux",
-    "build:win": "npm run build -- --win",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write",
+    "prebuild": "npm run clean && npm run lint && npm run format && npm run deploy",
+    "build": "electron-builder",
+    "build:dir": "electron-builder --dir",
+    "clean": "bash ./scripts/clean.sh",
     "reset": "bash ./scripts/reset.sh"
-  },
-  "engines": {
-    "node": ">=16.0.0"
   },
   "dependencies": {
     "pinia": "^2.0.35",

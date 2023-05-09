@@ -6,13 +6,10 @@ import eslintPlugin from "vite-plugin-eslint";
 import vuetifyPlugin from "vite-plugin-vuetify";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import vue from "@vitejs/plugin-vue";
-import { rmSync } from "fs";
 import { resolve, dirname } from "path";
 import { builtinModules } from "module";
 
 export default defineConfig(() => {
-  rmSync("dist", { recursive: true, force: true });
-
   return {
     define: {
       __VUE_I18N_FULL_INSTALL__: true,

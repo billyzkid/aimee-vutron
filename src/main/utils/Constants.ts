@@ -1,14 +1,10 @@
 import { join } from "path";
-import { name, version } from "../../../package.json";
+import { version, productName } from "../../../package.json";
 
 export default class Constants {
-  // Display app name (uppercase first letter)
-  static APP_NAME = name.charAt(0).toUpperCase() + name.slice(1);
-
+  static APP_NAME = productName;
   static APP_VERSION = version;
-
   static IS_DEV_ENV = process.env.NODE_ENV === "development";
-
   static IS_MAC = process.platform === "darwin";
 
   static DEFAULT_WEB_PREFERENCES = {

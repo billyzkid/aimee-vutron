@@ -1,7 +1,8 @@
 {
-  "private": true,
   "name": "aimee-vutron",
   "version": "0.0.1",
+
+  "productName": "AImee",
   "description": "Meet AImee, your artificially intelligent best friend!",
   "keywords": [
     "Electron",
@@ -15,12 +16,24 @@
     "Microsoft",
     "Azure Cognitive Services"
   ],
+
   "author": "Will Allan <billyzkid@yahoo.com> (https://github.com/billyzkid)",
   "homepage": "https://github.com/billyzkid/aimee-vutron#readme",
   "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
   "repository": "github:billyzkid/aimee-vutron",
+
   "license": "Unlicense",
+  "private": true,
+
   "main": "./dist/input/main/index.js",
+  "build": {
+    "appId": "com.github.billyzkid.aimee-vutron",
+    "artifactName": "${name}-setup-${version}-${platform}-${arch}.${ext}",
+    "files": ["./dist/input"],
+    "directories": {
+      "output": "./dist/output"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "dev:debug": "vite --debug",
@@ -31,10 +44,10 @@
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "build": "electron-builder",
-    "build:dir": "electron-builder --dir",
-    "prebuild": "npm run clean && npm run lint && npm run format && npm run deploy",
+    "build:test": "electron-builder --dir",
     "clean": "bash ./scripts/clean.sh",
-    "reset": "bash ./scripts/reset.sh"
+    "reset": "bash ./scripts/reset.sh",
+    "prebuild": "npm run clean && npm run lint && npm run deploy"
   },
   "dependencies": {
     "pinia": "^2.0.35",
@@ -53,11 +66,7 @@
     "electron-builder": "^24.3.0",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.11.0",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4",

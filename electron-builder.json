@@ -1,7 +1,0 @@
-{
-  "appId": "com.github.aimee-vutron",
-  "directories": {
-    "output": "./dist/output"
-  },
-  "files": ["./dist/input"]
-}

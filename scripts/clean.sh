@@ -5,6 +5,6 @@
 # repository to ensure this script always behaves consistently
 cd $(git rev-parse --show-toplevel)
 
-# Delete the dist folder
+# Remove the dist folder
 # Reference: https://git-scm.com/docs/git-clean
-git clean ./dist -d -x --force --force
+git clean ./dist -X --force --quiet

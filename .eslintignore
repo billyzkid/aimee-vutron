@@ -1,9 +1,6 @@
-node_modules/
-buildAssets/
-dist/
-release/
-docs/
+# https://eslint.org/docs/latest/use/configure/ignore
 
-.idea/
-.vscode/
-.github/
+# Ignored folders
+/build/
+/dist/
+/node_modules/

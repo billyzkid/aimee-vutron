@@ -1,12 +1,9 @@
-# Lock files
-*-lock.json
+# https://prettier.io/docs/en/ignore.html
 
-# IDEs
-.idea/
-.vscode/
+# Ignored folders
+/build/
+/dist/
+/node_modules/
 
-# Project files
-.github/
-buildAssets/
-dist/
-release/
+# Ignored files
+/package-lock.json

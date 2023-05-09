@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Main Process",
+      "request": "launch",
+      "type": "node",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"]
+    },
+    {
+      "name": "Renderer Process",
+      "request": "attach",
+      "type": "chrome",
+      "port": 9222,
+      "timeout": 30000
+    }
+  ],
+  "compounds": [
+    {
+      "name": "AImee",
+      "configurations": ["Main Process", "Renderer Process"],
+      "presentation": {
+        "group": "",
+        "order": 0
+      }
+    }
+  ]
+}

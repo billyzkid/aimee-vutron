@@ -1,11 +1,18 @@
-# http://editorconfig.org
+# https://editorconfig.org
+
+# Root file
 root = true
 
+# Default file settings
 [*]
 charset = utf-8
-end_of_line = lf
+end_of_line = crlf
 indent_style = space
 indent_size = 2
-insert_final_newline = true
-max_line_length = 100
+max_line_length = 120
 trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Markdown documents
+[*.md]
+trim_trailing_whitespace = false

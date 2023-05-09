@@ -1,33 +1,39 @@
 {
-  "name": "vutron",
-  "version": "1.0.0",
-  "description": "Quick Start Templates for Vite + Vue 3 + Electron",
-  "homepage": "https://vutron.jooy2.com",
-  "author": "jooy2 <jooy2.contact@gmail.com>",
-  "license": "MIT",
-  "main": "dist/main/index.js",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jooy2/vutron.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jooy2/vutron/issues"
-  },
+  "name": "aimee-vutron",
+  "version": "0.0.1",
+  "description": "Meet AImee, your artificially intelligent best friend!",
+  "keywords": [
+    "Electron",
+    "TypeScript",
+    "ChatGPT API",
+    "Speech SDK",
+    "Cubism SDK",
+    "OpenJS",
+    "OpenAI",
+    "Live2D",
+    "Microsoft",
+    "Azure Cognitive Services"
+  ],
+  "author": "Will Allan <billyzkid@yahoo.com> (https://github.com/billyzkid)",
+  "homepage": "https://github.com/billyzkid/aimee-vutron#readme",
+  "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
+  "repository": "github:billyzkid/aimee-vutron",
+  "license": "Unlicense",
+  "main": "dist/main/index.js",
   "scripts": {
     "dev": "vite",
-    "dev:debug": "vite -d",
-    "dev:debug:force": "vite -d --force",
-    "build": "npm run build:pre && electron-builder -wml",
-    "build:pre": "npm run format:fix && vue-tsc --noEmit && vite build",
-    "build:dir": "npm run build:pre && electron-builder --dir",
-    "build:mac": "npm run build:pre && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
-    "build:linux": "npm run build:pre && electron-builder --linux",
-    "build:win": "npm run build:pre && electron-builder --windows",
-    "lint": "eslint --ext .js,.ts,.vue -f ./node_modules/eslint-friendly-formatter src",
-    "lint:fix": "eslint --ext .js,.ts,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
-    "format": "prettier .",
-    "format:fix": "prettier . --write"
+    "dev:debug": "vite --debug",
+    "dev:force": "vite --force",
+    "lint": "eslint . --ext .js,.ts,.vue",
+    "lint:fix": "eslint . --ext .js,.ts,.vue --fix",
+    "format": "prettier . --check --loglevel=silent",
+    "format:fix": "prettier . --write --loglevel=silent",
+    "prebuild": "npm run lint && npm run format && vite build",
+    "build": "electron-builder --config ./electron-builder.config.json",
+    "build:mac": "npm run build -- --mac",
+    "build:linux": "npm run build -- --linux",
+    "build:win": "npm run build -- --win"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -50,7 +56,6 @@
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-friendly-formatter": "^4.0.1",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",

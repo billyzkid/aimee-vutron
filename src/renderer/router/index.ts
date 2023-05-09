@@ -1,33 +1,33 @@
-import { createRouter, createWebHashHistory } from 'vue-router/dist/vue-router.esm-bundler'
-import { MainScreen, ErrorScreen, SecondScreen } from '@/renderer/screens'
+import { createRouter, createWebHashHistory } from "vue-router/dist/vue-router.esm-bundler";
+import { MainScreen, ErrorScreen, SecondScreen } from "@/renderer/screens";
 
 export default createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
+      path: "/",
       component: MainScreen,
       meta: {
-        titleKey: 'title.main'
+        titleKey: "title.main"
       }
     },
     {
-      path: '/second',
+      path: "/second",
       component: SecondScreen,
       meta: {
-        titleKey: 'title.second'
+        titleKey: "title.second"
       }
     },
     {
-      path: '/error',
+      path: "/error",
       component: ErrorScreen,
       meta: {
-        titleKey: 'title.error'
+        titleKey: "title.error"
       }
     },
     {
-      path: '/:pathMatch(.*)*',
-      redirect: '/'
+      path: "/:pathMatch(.*)*",
+      redirect: "/"
     }
   ]
-})
+});

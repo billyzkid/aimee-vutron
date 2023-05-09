@@ -1,0 +1,11 @@
+# https://git-scm.com/docs/gitattributes
+
+# Default file settings
+# Normalize line endings for text files automatically
+* text=auto
+
+# Markdown documents
+*.md text diff=markdown
+
+# Bash scripts
+*.sh text eol=lf

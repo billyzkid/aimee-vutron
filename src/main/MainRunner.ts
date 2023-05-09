@@ -1,14 +1,14 @@
-import { app, BrowserWindow, RenderProcessGoneDetails } from 'electron'
-import Constants from './utils/Constants'
-import IPCs from './IPCs'
+import { app, BrowserWindow, RenderProcessGoneDetails } from "electron";
+import Constants from "./utils/Constants";
+import IPCs from "./IPCs";
 
 const exitApp = (mainWindow: BrowserWindow): void => {
   if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.hide()
+    mainWindow.hide();
   }
-  mainWindow.destroy()
-  app.exit()
-}
+  mainWindow.destroy();
+  app.exit();
+};
 
 export const createMainWindow = async (mainWindow: BrowserWindow): Promise<BrowserWindow> => {
   mainWindow = new BrowserWindow({
@@ -18,39 +18,39 @@ export const createMainWindow = async (mainWindow: BrowserWindow): Promise<Brows
     height: 650,
     useContentSize: true,
     webPreferences: Constants.DEFAULT_WEB_PREFERENCES
-  })
+  });
 
-  mainWindow.setMenu(null)
+  mainWindow.setMenu(null);
 
-  mainWindow.on('close', (event: Event): void => {
-    event.preventDefault()
-    exitApp(mainWindow)
-  })
+  mainWindow.on("close", (event: Event): void => {
+    event.preventDefault();
+    exitApp(mainWindow);
+  });
 
-  mainWindow.webContents.on('did-frame-finish-load', (): void => {
+  mainWindow.webContents.on("did-frame-finish-load", (): void => {
     if (Constants.IS_DEV_ENV) {
-      mainWindow.webContents.openDevTools()
+      mainWindow.webContents.openDevTools();
     }
-  })
+  });
 
-  mainWindow.once('ready-to-show', (): void => {
-    mainWindow.setAlwaysOnTop(true)
-    mainWindow.show()
-    mainWindow.focus()
-    mainWindow.setAlwaysOnTop(false)
-  })
+  mainWindow.once("ready-to-show", (): void => {
+    mainWindow.setAlwaysOnTop(true);
+    mainWindow.show();
+    mainWindow.focus();
+    mainWindow.setAlwaysOnTop(false);
+  });
 
   if (Constants.IS_DEV_ENV) {
-    await mainWindow.loadURL(Constants.APP_INDEX_URL_DEV)
+    await mainWindow.loadURL(Constants.APP_INDEX_URL_DEV);
   } else {
-    await mainWindow.loadFile(Constants.APP_INDEX_URL_PROD)
+    await mainWindow.loadFile(Constants.APP_INDEX_URL_PROD);
   }
 
   // Initialize IPC Communication
-  IPCs.initialize(mainWindow)
+  IPCs.initialize(mainWindow);
 
-  return mainWindow
-}
+  return mainWindow;
+};
 
 export const createErrorWindow = async (
   errorWindow: BrowserWindow,
@@ -58,7 +58,7 @@ export const createErrorWindow = async (
   details?: RenderProcessGoneDetails
 ): Promise<BrowserWindow> => {
   if (!Constants.IS_DEV_ENV) {
-    mainWindow?.hide()
+    mainWindow?.hide();
   }
 
   errorWindow = new BrowserWindow({
@@ -66,29 +66,29 @@ export const createErrorWindow = async (
     show: false,
     resizable: Constants.IS_DEV_ENV,
     webPreferences: Constants.DEFAULT_WEB_PREFERENCES
-  })
+  });
 
-  errorWindow.setMenu(null)
+  errorWindow.setMenu(null);
 
   if (Constants.IS_DEV_ENV) {
-    await errorWindow.loadURL(`${Constants.APP_INDEX_URL_DEV}#/error`)
+    await errorWindow.loadURL(`${Constants.APP_INDEX_URL_DEV}#/error`);
   } else {
-    await errorWindow.loadFile(Constants.APP_INDEX_URL_PROD, { hash: 'error' })
+    await errorWindow.loadFile(Constants.APP_INDEX_URL_PROD, { hash: "error" });
   }
 
-  errorWindow.on('ready-to-show', (): void => {
+  errorWindow.on("ready-to-show", (): void => {
     if (!Constants.IS_DEV_ENV && mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.destroy()
+      mainWindow.destroy();
     }
-    errorWindow.show()
-    errorWindow.focus()
-  })
+    errorWindow.show();
+    errorWindow.focus();
+  });
 
-  errorWindow.webContents.on('did-frame-finish-load', (): void => {
+  errorWindow.webContents.on("did-frame-finish-load", (): void => {
     if (Constants.IS_DEV_ENV) {
-      errorWindow.webContents.openDevTools()
+      errorWindow.webContents.openDevTools();
     }
-  })
+  });
 
-  return errorWindow
-}
+  return errorWindow;
+};

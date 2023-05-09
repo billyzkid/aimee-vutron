@@ -1,4 +1,4 @@
-import { app, BrowserWindow, RenderProcessGoneDetails } from "electron";
+import { app, BrowserWindow } from "electron";
 import Constants from "./utils/Constants";
 import IPCs from "./IPCs";
 
@@ -54,8 +54,7 @@ export const createMainWindow = async (mainWindow: BrowserWindow): Promise<Brows
 
 export const createErrorWindow = async (
   errorWindow: BrowserWindow,
-  mainWindow: BrowserWindow,
-  details?: RenderProcessGoneDetails
+  mainWindow: BrowserWindow
 ): Promise<BrowserWindow> => {
   if (!Constants.IS_DEV_ENV) {
     mainWindow?.hide();

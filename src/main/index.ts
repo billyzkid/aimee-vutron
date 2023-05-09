@@ -1,4 +1,4 @@
-import { app, WebContents, RenderProcessGoneDetails } from "electron";
+import { app } from "electron";
 import Constants from "./utils/Constants";
 import { createErrorWindow, createMainWindow } from "./MainRunner";
 import { macOSDisableDefaultMenuItem } from "./utils/Menus";
@@ -27,8 +27,8 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("render-process-gone", (event: Event, webContents: WebContents, details: RenderProcessGoneDetails) => {
-  errorWindow = createErrorWindow(errorWindow, mainWindow, details);
+app.on("render-process-gone", () => {
+  errorWindow = createErrorWindow(errorWindow, mainWindow);
 });
 
 process.on("uncaughtException", () => {

@@ -5,6 +5,7 @@ const mainAvailChannels: string[] = ["msgRequestGetVersion", "msgOpenExternalLin
 const rendererAvailChannels: string[] = ["msgReceivedVersion"];
 
 contextBridge.exposeInMainWorld("mainApi", {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   send: (channel: string, ...data: any[]): void => {
     if (mainAvailChannels.includes(channel)) {
       ipcRenderer.send.apply(null, [channel, ...data]);
@@ -12,13 +13,15 @@ contextBridge.exposeInMainWorld("mainApi", {
       throw new Error(`Send failed: Unknown ipc channel name: ${channel}`);
     }
   },
-  receive: (channel: string, cbFunc: Function): void => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  receive: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void => {
     if (rendererAvailChannels.includes(channel)) {
-      ipcRenderer.on(channel, (event, ...args) => cbFunc(event, ...args));
+      ipcRenderer.on(channel, listener);
     } else {
       throw new Error(`Receive failed: Unknown ipc channel name: ${channel}`);
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   invoke: async (channel: string, ...data: any[]): Promise<any> => {
     if (mainAvailChannels.includes(channel)) {
       const result = await ipcRenderer.invoke.apply(null, [channel, ...data]);

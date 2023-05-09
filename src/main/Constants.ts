@@ -1,5 +1,5 @@
 import { join } from "path";
-import { version, productName } from "../../../package.json";
+import { productName, version } from "../../package.json";
 
 export default class Constants {
   static APP_NAME = productName;

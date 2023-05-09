@@ -1,7 +1,6 @@
 {
   "name": "aimee-vutron",
   "version": "0.0.1",
-
   "productName": "AImee",
   "description": "Meet AImee, your artificially intelligent best friend!",
   "keywords": [
@@ -16,22 +15,22 @@
     "Microsoft",
     "Azure Cognitive Services"
   ],
-
   "author": "Will Allan <billyzkid@yahoo.com> (https://github.com/billyzkid)",
   "homepage": "https://github.com/billyzkid/aimee-vutron#readme",
   "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
   "repository": "github:billyzkid/aimee-vutron",
-
   "license": "Unlicense",
   "private": true,
-
-  "main": "./dist/input/main/index.js",
+  "main": "./dist/main",
   "build": {
     "appId": "com.github.billyzkid.aimee-vutron",
-    "artifactName": "${name}-setup-${version}-${platform}-${arch}.${ext}",
-    "files": ["./dist/input"],
+    "artifactName": "${name}-setup-${version}-${os}-${arch}.${ext}",
+    "files": [
+      "./dist/**/*",
+      "!./dist/builds"
+    ],
     "directories": {
-      "output": "./dist/output"
+      "output": "./dist/builds"
     }
   },
   "scripts": {

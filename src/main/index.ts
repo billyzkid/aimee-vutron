@@ -1,7 +1,7 @@
 import { app } from "electron";
-import Constants from "./utils/Constants";
+import Constants from "./Constants";
 import { createErrorWindow, createMainWindow } from "./MainRunner";
-import { macOSDisableDefaultMenuItem } from "./utils/Menus";
+import { macOSDisableDefaultMenuItem } from "./Menus";
 
 let mainWindow;
 let errorWindow;

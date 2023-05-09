@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from "electron";
-import Constants from "./utils/Constants";
+import Constants from "./Constants";
 import IPCs from "./IPCs";
 
 const exitApp = (mainWindow: BrowserWindow): void => {

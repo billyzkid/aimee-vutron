@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcMain, shell } from "electron";
-import Constants from "./utils/Constants";
+import Constants from "./Constants";
 
 /*
  * IPC Communications

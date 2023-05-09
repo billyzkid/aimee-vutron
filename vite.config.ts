@@ -1,4 +1,3 @@
-import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import electronPlugin from "vite-plugin-electron";
 import rendererPlugin from "vite-plugin-electron-renderer";
@@ -6,10 +5,13 @@ import eslintPlugin from "vite-plugin-eslint";
 import vuetifyPlugin from "vite-plugin-vuetify";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import vue from "@vitejs/plugin-vue";
-import { resolve, dirname } from "path";
+import { resolve } from "path";
 import { builtinModules } from "module";
 
 export default defineConfig(() => {
+  const srcDir = resolve("./src");
+  const distDir = resolve("./dist");
+
   return {
     define: {
       __VUE_I18N_FULL_INSTALL__: true,
@@ -19,31 +21,26 @@ export default defineConfig(() => {
     resolve: {
       extensions: [".mjs", ".js", ".ts", ".vue", ".json", ".scss"],
       alias: {
-        "@": resolve(dirname(fileURLToPath(import.meta.url)), "src")
+        "@": srcDir
       }
     },
-    base: "./",
-    root: resolve("./src/renderer"),
-    publicDir: resolve("./src/renderer/public"),
-    clearScreen: false,
+    base: "",
+    root: resolve(srcDir, "renderer"),
     build: {
-      outDir: resolve("./dist/input")
+      outDir: distDir
     },
     plugins: [
       vue(),
       vueJsx(),
-      vuetifyPlugin({ autoImport: true }),
+      vuetifyPlugin(),
       eslintPlugin(),
       electronPlugin([
         {
-          entry: ["./src/main/index.ts"],
-          onstart: (options) => {
-            options.startup();
-          },
+          onstart: (options) => options.startup(),
+          entry: [resolve(srcDir, "main/index.ts")],
           vite: {
             build: {
-              assetsDir: ".",
-              outDir: "./dist/input/main",
+              outDir: resolve(distDir, "main"),
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
@@ -51,13 +48,12 @@ export default defineConfig(() => {
           }
         },
         {
-          entry: ["./src/preload/index.ts"],
-          onstart: (options) => {
-            options.reload();
-          },
+          // Reload the page
+          onstart: (options) => options.reload(),
+          entry: [resolve(srcDir, "preload/index.ts")],
           vite: {
             build: {
-              outDir: "./dist/input/preload"
+              outDir: resolve(distDir, "preload")
             }
           }
         }

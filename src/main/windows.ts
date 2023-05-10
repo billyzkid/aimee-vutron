@@ -36,7 +36,7 @@ export async function createMainWindow() {
     mainWindow.setAlwaysOnTop(false);
   });
 
-  if (import.meta.env.DEV) {
+  if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
     await mainWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
   } else {
     await mainWindow.loadFile(path.join(__dirname, "../index.html"));
@@ -47,7 +47,7 @@ export async function createMainWindow() {
   return mainWindow;
 }
 
-export async function createErrorWindow(mainWindow: BrowserWindow) {
+export async function createErrorWindow(mainWindow: BrowserWindow | undefined) {
   if (import.meta.env.PROD) {
     mainWindow?.hide();
   }
@@ -65,7 +65,7 @@ export async function createErrorWindow(mainWindow: BrowserWindow) {
 
   errorWindow.setMenu(null);
 
-  if (import.meta.env.DEV) {
+  if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
     await errorWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL + "#/error");
   } else {
     await errorWindow.loadFile(path.join(__dirname, "../index.html"), { hash: "error" });

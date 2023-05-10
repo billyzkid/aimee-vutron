@@ -2,11 +2,12 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "jsx": "preserve",
     "moduleResolution": "node",
-    "composite": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "composite": true
+    //"types": ["node"]
   },
-  "include": ["./package.json", "./vite.config.ts", "./src/main", "./src/preload", "./types"]
+  "include": ["./src/main", "./src/preload", "./types", "./package.json", "./vite.config.ts"]
 }

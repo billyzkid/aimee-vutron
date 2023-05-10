@@ -1,14 +1,13 @@
 import { createVuetify } from "vuetify";
-import { ko, en, zhHans, zhHant, de, es, ja, fr, ru, pt } from "vuetify/locale";
+import { de, en, es, fr, ja, ko, pt, ru, zhHans, zhHant } from "vuetify/locale";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
+import colors from "vuetify/lib/util/colors.mjs";
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.min.css";
 
-import colors from "vuetify/lib/util/colors.mjs";
-
 export default createVuetify({
   locale: {
-    messages: { ko, en, zhHans, zhHant, de, es, ja, fr, ru, pt },
+    messages: { de, en, es, fr, ja, ko, pt, ru, zhHans, zhHant },
     locale: "en",
     fallback: "en"
   },

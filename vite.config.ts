@@ -4,15 +4,16 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import vuetify from "vite-plugin-vuetify";
 import eslint from "vite-plugin-eslint";
 import electron, { Configuration } from "vite-plugin-electron";
-import electronRenderer from "vite-plugin-electron-renderer";
+import renderer from "vite-plugin-electron-renderer";
 import { builtinModules } from "module";
-import { productName, version } from "./package.json";
 import * as path from "path";
 
-process.env.VITE_APP_NAME = productName;
-process.env.VITE_APP_VERSION = version;
+export default defineConfig(async ({ command, mode }) => {
+  const { productName, version } = await import("./package.json");
 
-export default defineConfig(({ command, mode }) => {
+  process.env.VITE_APP_NAME = productName;
+  process.env.VITE_APP_VERSION = version;
+
   const srcDir = path.resolve("./src");
   const distDir = path.resolve("./dist");
 
@@ -29,8 +30,8 @@ export default defineConfig(({ command, mode }) => {
     vite: {
       build: {
         outDir: path.join(distDir, "main"),
-        sourcemap,
         minify,
+        sourcemap,
         rollupOptions: {
           external: ["electron", ...builtinModules]
         }
@@ -44,8 +45,8 @@ export default defineConfig(({ command, mode }) => {
     vite: {
       build: {
         outDir: path.join(distDir, "preload"),
-        sourcemap,
-        minify
+        minify,
+        sourcemap
       }
     },
     onstart: (options) => options.reload()
@@ -60,13 +61,13 @@ export default defineConfig(({ command, mode }) => {
     root: path.join(srcDir, "renderer"),
     build: {
       outDir: distDir,
-      sourcemap,
-      minify
+      minify,
+      sourcemap
     },
     resolve: {
       extensions: [".mjs", ".js", ".ts", ".vue", ".json", ".scss"],
       alias: { "@": srcDir }
     },
-    plugins: [vue(), vueJsx(), vuetify(), eslint(), electron([mainConfig, preloadConfig]), electronRenderer()]
+    plugins: [vue(), vueJsx(), vuetify(), eslint(), electron([mainConfig, preloadConfig]), renderer()]
   };
 });

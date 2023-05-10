@@ -13,5 +13,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src/main", "./src/preload", "./types", "./package.json", "./vite.config.ts"]
+  "include": ["./src/env.d.ts", "./src/main", "./src/preload", "./package.json", "./vite.config.ts"]
 }

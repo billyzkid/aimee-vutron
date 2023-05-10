@@ -1,6 +1,8 @@
 {
+  "private": true,
   "name": "aimee-vutron",
   "version": "0.0.1",
+  "license": "Unlicense",
   "productName": "AImee",
   "description": "Meet AImee, your artificially intelligent best friend!",
   "keywords": [
@@ -19,20 +21,7 @@
   "homepage": "https://github.com/billyzkid/aimee-vutron#readme",
   "bugs": "https://github.com/billyzkid/aimee-vutron/issues",
   "repository": "github:billyzkid/aimee-vutron",
-  "license": "Unlicense",
-  "private": true,
   "main": "./dist/main",
-  "build": {
-    "appId": "com.github.billyzkid.aimee-vutron",
-    "artifactName": "${name}-setup-${version}-${os}-${arch}.${ext}",
-    "files": [
-      "./dist/**/*",
-      "!./dist/builds"
-    ],
-    "directories": {
-      "output": "./dist/builds"
-    }
-  },
   "scripts": {
     "dev": "vite",
     "dev:debug": "vite --debug",

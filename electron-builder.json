@@ -1,0 +1,8 @@
+{
+  "appId": "com.github.billyzkid.aimee-vutron",
+  "artifactName": "${name}-setup-${version}-${os}-${arch}.${ext}",
+  "files": ["./dist/**/*", "!./dist/builds"],
+  "directories": {
+    "output": "./dist/builds"
+  }
+}

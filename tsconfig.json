@@ -13,7 +13,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src/renderer", "./types"],
+  "include": ["./src/env.d.ts", "./src/renderer"],
   "references": [
     {
       "path": "./tsconfig.node.json"

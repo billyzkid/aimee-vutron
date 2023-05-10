@@ -9,8 +9,8 @@
   const { locale, availableLocales } = useI18n();
   const { counterIncrease } = useCounterStore();
   const { counter } = storeToRefs(useCounterStore());
-
   const theme = useTheme();
+
   const languages = ref(["en"]);
   const appVersion = ref("Unknown");
 

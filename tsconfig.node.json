@@ -6,8 +6,12 @@
     "strict": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "composite": true
-    //"types": ["node"]
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "composite": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["./src/main", "./src/preload", "./types", "./package.json", "./vite.config.ts"]
 }

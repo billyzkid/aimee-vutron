@@ -12,6 +12,7 @@
       "name": "Renderer Process",
       "request": "attach",
       "type": "chrome",
+      "webRoot": "${workspaceFolder}/src/renderer",
       "port": 9222,
       "timeout": 30000
     }

@@ -27,7 +27,8 @@ export default defineConfig(() => {
     base: "",
     root: resolve(srcDir, "renderer"),
     build: {
-      outDir: distDir
+      outDir: distDir,
+      sourcemap: true
     },
     plugins: [
       vue(),
@@ -36,11 +37,12 @@ export default defineConfig(() => {
       eslintPlugin(),
       electronPlugin([
         {
-          onstart: (options) => options.startup(),
+          onstart: (options) => options.startup([".", "--no-sandbox", "--remote-debugging-port=9222"]),
           entry: [resolve(srcDir, "main/index.ts")],
           vite: {
             build: {
               outDir: resolve(distDir, "main"),
+              sourcemap: true,
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
@@ -53,7 +55,8 @@ export default defineConfig(() => {
           entry: [resolve(srcDir, "preload/index.ts")],
           vite: {
             build: {
-              outDir: resolve(distDir, "preload")
+              outDir: resolve(distDir, "preload"),
+              sourcemap: true
             }
           }
         }

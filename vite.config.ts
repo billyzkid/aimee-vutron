@@ -21,7 +21,7 @@ export default defineConfig(async ({ command, mode }) => {
   const sourcemap = mode === "development" ? "inline" : false;
   const startupArgv = command === "serve" ? [".", "--no-sandbox"] : undefined;
 
-  if (startupArgv && process.env.REMOTE_DEBUGGING_PORT !== undefined) {
+  if (startupArgv !== undefined && process.env.REMOTE_DEBUGGING_PORT !== undefined) {
     startupArgv.push(`--remote-debugging-port=${process.env.REMOTE_DEBUGGING_PORT}`);
   }
 

@@ -1,19 +1,11 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-
-import App from "@/renderer/App.vue";
 import router from "@/renderer/router";
 import vuetify from "@/renderer/plugins/vuetify";
 import i18n from "@/renderer/plugins/i18n";
-
-declare global {
-  interface Window {
-    mainApi?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  }
-}
+import App from "@/renderer/App.vue";
 
 const app = createApp(App);
 
-app.use(vuetify).use(i18n).use(router).use(createPinia());
-
+app.use(createPinia()).use(router).use(vuetify).use(i18n);
 app.mount("#app");

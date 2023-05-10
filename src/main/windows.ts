@@ -95,5 +95,6 @@ function exitApp(mainWindow: BrowserWindow) {
   }
 
   mainWindow.destroy();
+
   app.exit();
 }

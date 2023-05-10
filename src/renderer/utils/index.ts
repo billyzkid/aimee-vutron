@@ -1,11 +1,7 @@
-export default class Utils {
-  static getCurrentLocale(): string {
-    return navigator?.language?.split("-")[0] || "en";
-  }
-
-  static async openExternal(url: string): Promise<void> {
-    await window.mainApi.send("msgOpenExternalLink", url);
-  }
+export function getCurrentLocale(): string {
+  return navigator?.language?.split("-")[0] || "en";
 }
 
-export const { getCurrentLocale, openExternal } = Utils;
+export function openExternal(url: string): Promise<void> {
+  return window.mainApi.send("msgOpenExternalLink", url);
+}

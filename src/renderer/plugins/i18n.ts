@@ -13,9 +13,9 @@ import * as zhHant from "@/renderer/locales/zh-hant.json";
 
 export default createI18n({
   legacy: false,
+  globalInjection: true,
   locale: getCurrentLocale(),
   fallbackLocale: "en",
-  globalInjection: true,
   messages: {
     de,
     en,

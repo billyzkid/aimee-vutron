@@ -9,6 +9,7 @@
   const { locale, availableLocales } = useI18n();
   const { counterIncrease } = useCounterStore();
   const { counter } = storeToRefs(useCounterStore());
+
   const theme = useTheme();
   const languages = ref(["en"]);
   const appVersion = ref("Unknown");
@@ -16,10 +17,11 @@
   onMounted((): void => {
     languages.value = availableLocales;
 
-    // Get application version from package.json version string (Using IPC communication)
+    // Get application version
     window.mainApi.receive("msgReceivedVersion", (event: Event, version: string) => {
       appVersion.value = version;
     });
+
     window.mainApi.send("msgRequestGetVersion");
   });
 
@@ -27,7 +29,7 @@
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
   };
 
-  const handleChangeLanguage = (val): void => {
+  const handleChangeLanguage = (val: string): void => {
     locale.value = val;
   };
 

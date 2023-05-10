@@ -1,6 +1,8 @@
 import * as path from "path";
 import { productName, version } from "../../package.json";
 
+console.log(import.meta);
+
 export const APP_NAME = productName;
 export const APP_VERSION = version;
 

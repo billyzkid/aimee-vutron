@@ -1,76 +1,79 @@
-import { defineConfig } from "vite";
+import { UserConfigExport } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import vuetifyPlugin from "vite-plugin-vuetify";
-import eslintPlugin from "vite-plugin-eslint";
-import electronPlugin from "vite-plugin-electron";
-import rendererPlugin from "vite-plugin-electron-renderer";
+import vuetify from "vite-plugin-vuetify";
+import eslint from "vite-plugin-eslint";
+import electron, { Configuration } from "vite-plugin-electron";
+import renderer from "vite-plugin-electron-renderer";
 import { builtinModules } from "module";
-import path from "path";
+import { productName, version } from "./package.json";
+import * as path from "path";
 
-export default defineConfig(() => {
-  return {
-    define: {
-      __VUE_I18N_FULL_INSTALL__: true,
-      __VUE_I18N_LEGACY_API__: false,
-      __INTLIFY_PROD_DEVTOOLS__: false
-    },
-    resolve: {
-      extensions: [".mjs", ".js", ".ts", ".vue", ".json", ".scss"],
-      alias: {
-        "@": path.resolve("./src")
-      }
-    },
-    base: "",
-    root: path.resolve("./src/renderer"),
+process.env.VITE_APP_NAME = productName;
+process.env.VITE_APP_VERSION = version;
+
+const isDevelopment = process.env.NODE_ENV === "development";
+const isDebugging = process.env.REMOTE_DEBUGGING_PORT !== undefined;
+
+
+
+const sourcemap = isDebugging ? "inline" : false;
+const minify = !isDevelopment ? "esbuild" : false;
+
+const srcDir = path.resolve("./src");
+const distDir = path.resolve("./dist");
+
+const mainConfig: Configuration = {
+  entry: path.join(srcDir, "main", "index.ts"),
+  vite: {
     build: {
-      outDir: path.resolve("./dist"),
-      sourcemap: true
-    },
-    plugins: [
-      vue(),
-      vueJsx(),
-      vuetifyPlugin(),
-      eslintPlugin(),
-      electronPlugin([
-        {
-          onstart: (options) => {
-            const args = getElectronArgs();
-            return options.startup(args);
-          },
-          entry: [path.resolve("./src/main/index.ts")],
-          vite: {
-            build: {
-              outDir: path.resolve("./dist/main"),
-              sourcemap: true,
-              rollupOptions: {
-                external: ["electron", ...builtinModules]
-              }
-            }
-          }
-        },
-        {
-          onstart: (options) => options.reload(),
-          entry: [path.resolve("./src/preload/index.ts")],
-          vite: {
-            build: {
-              outDir: path.resolve("./dist/preload"),
-              sourcemap: true
-            }
-          }
-        }
-      ]),
-      rendererPlugin()
-    ]
-  };
-});
-
-function getElectronArgs(): string[] {
-  const args = [".", "--no-sandbox"];
-
-  if (process.env.NODE_ENV === "development" && process.env.REMOTE_DEBUGGING_PORT !== undefined) {
-    args.push(`--remote-debugging-port=${process.env.REMOTE_DEBUGGING_PORT}`);
+      outDir: path.join(distDir, "main"),
+      sourcemap,
+      minify,
+      rollupOptions: {
+        external: ["electron", ...builtinModules]
+      }
+    }
+  },
+  onstart: (options) => {
+    if (isDebugging) {
+      return options.startup([".", "--no-sandbox", `--remote-debugging-port=${process.env.REMOTE_DEBUGGING_PORT}`]);
+    } else {
+      return options.startup();
+    }
   }
+};
 
-  return args;
-}
+const preloadConfig: Configuration = {
+  entry: path.join(srcDir, "preload", "index.ts"),
+  vite: {
+    build: {
+      outDir: path.join(distDir, "preload"),
+      sourcemap,
+      minify
+    }
+  },
+  onstart: (options) => options.reload()
+};
+
+const userConfig: UserConfigExport = {
+  define: {
+    __VUE_I18N_FULL_INSTALL__: true,
+    __VUE_I18N_LEGACY_API__: false,
+    __INTLIFY_PROD_DEVTOOLS__: false
+  },
+  base: "",
+  root: path.join(srcDir, "renderer"),
+  build: {
+    outDir: distDir,
+    sourcemap,
+    minify
+  },
+  resolve: {
+    extensions: [".mjs", ".js", ".ts", ".vue", ".json", ".scss"],
+    alias: { "@": srcDir }
+  },
+  plugins: [vue(), vueJsx(), vuetify(), eslint(), electron([mainConfig, preloadConfig]), renderer()]
+};
+
+export default userConfig;

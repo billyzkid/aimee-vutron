@@ -5,8 +5,13 @@
       "name": "Main Process",
       "request": "launch",
       "type": "node",
+      "cwd": "${workspaceFolder}",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"]
+      "runtimeArgs": ["run", "dev"],
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "REMOTE_DEBUGGING_PORT": "9222"
+      }
     },
     {
       "name": "Renderer Process",
@@ -19,10 +24,9 @@
   ],
   "compounds": [
     {
-      "name": "AImee",
+      "name": "All Processes",
       "configurations": ["Main Process", "Renderer Process"],
       "presentation": {
-        "group": "",
         "order": 0
       }
     }

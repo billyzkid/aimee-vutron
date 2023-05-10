@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("mainApi", {
       throw new Error(`Send failed: Unknown ipc channel name: ${channel}`);
     }
   },
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   receive: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void => {
     if (rendererAvailChannels.includes(channel)) {
@@ -21,6 +22,7 @@ contextBridge.exposeInMainWorld("mainApi", {
       throw new Error(`Receive failed: Unknown ipc channel name: ${channel}`);
     }
   },
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   invoke: async (channel: string, ...data: any[]): Promise<any> => {
     if (mainAvailChannels.includes(channel)) {

@@ -1,17 +1,14 @@
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import vuetifyPlugin from "vite-plugin-vuetify";
+import eslintPlugin from "vite-plugin-eslint";
 import electronPlugin from "vite-plugin-electron";
 import rendererPlugin from "vite-plugin-electron-renderer";
-import eslintPlugin from "vite-plugin-eslint";
-import vuetifyPlugin from "vite-plugin-vuetify";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import vue from "@vitejs/plugin-vue";
-import { resolve } from "path";
 import { builtinModules } from "module";
+import path from "path";
 
 export default defineConfig(() => {
-  const srcDir = resolve("./src");
-  const distDir = resolve("./dist");
-
   return {
     define: {
       __VUE_I18N_FULL_INSTALL__: true,
@@ -21,13 +18,13 @@ export default defineConfig(() => {
     resolve: {
       extensions: [".mjs", ".js", ".ts", ".vue", ".json", ".scss"],
       alias: {
-        "@": srcDir
+        "@": path.resolve("./src")
       }
     },
     base: "",
-    root: resolve(srcDir, "renderer"),
+    root: path.resolve("./src/renderer"),
     build: {
-      outDir: distDir,
+      outDir: path.resolve("./dist"),
       sourcemap: true
     },
     plugins: [
@@ -37,11 +34,14 @@ export default defineConfig(() => {
       eslintPlugin(),
       electronPlugin([
         {
-          onstart: (options) => options.startup([".", "--no-sandbox", "--remote-debugging-port=9222"]),
-          entry: [resolve(srcDir, "main/index.ts")],
+          onstart: (options) => {
+            const args = getElectronArgs();
+            return options.startup(args);
+          },
+          entry: [path.resolve("./src/main/index.ts")],
           vite: {
             build: {
-              outDir: resolve(distDir, "main"),
+              outDir: path.resolve("./dist/main"),
               sourcemap: true,
               rollupOptions: {
                 external: ["electron", ...builtinModules]
@@ -50,12 +50,11 @@ export default defineConfig(() => {
           }
         },
         {
-          // Reload the page
           onstart: (options) => options.reload(),
-          entry: [resolve(srcDir, "preload/index.ts")],
+          entry: [path.resolve("./src/preload/index.ts")],
           vite: {
             build: {
-              outDir: resolve(distDir, "preload"),
+              outDir: path.resolve("./dist/preload"),
               sourcemap: true
             }
           }
@@ -65,3 +64,13 @@ export default defineConfig(() => {
     ]
   };
 });
+
+function getElectronArgs(): string[] {
+  const args = [".", "--no-sandbox"];
+
+  if (process.env.NODE_ENV === "development" && process.env.REMOTE_DEBUGGING_PORT !== undefined) {
+    args.push(`--remote-debugging-port=${process.env.REMOTE_DEBUGGING_PORT}`);
+  }
+
+  return args;
+}

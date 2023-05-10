@@ -1,19 +1,18 @@
-import { join } from "path";
+import * as path from "path";
 import { productName, version } from "../../package.json";
 
-export default class Constants {
-  static APP_NAME = productName;
-  static APP_VERSION = version;
-  static IS_DEV_ENV = process.env.NODE_ENV === "development";
-  static IS_MAC = process.platform === "darwin";
+export const APP_NAME = productName;
+export const APP_VERSION = version;
 
-  static DEFAULT_WEB_PREFERENCES = {
-    nodeIntegration: false,
-    contextIsolation: true,
-    enableRemoteModule: false,
-    preload: join(__dirname, "../preload/index.js")
-  };
+export const APP_INDEX_URL_DEV = "http://localhost:5173/index.html";
+export const APP_INDEX_URL_PROD = path.join(__dirname, "../index.html");
 
-  static APP_INDEX_URL_DEV = "http://localhost:5173/index.html";
-  static APP_INDEX_URL_PROD = join(__dirname, "../index.html");
-}
+export const IS_MAC = process.platform === "darwin";
+export const IS_DEV = process.env.NODE_ENV === "development";
+
+export const DEFAULT_WEB_PREFERENCES = {
+  nodeIntegration: false,
+  contextIsolation: true,
+  enableRemoteModule: false,
+  preload: path.join(__dirname, "../preload/index.js")
+};

@@ -1,36 +1,33 @@
-import { app } from "electron";
-import Constants from "./Constants";
-import { createErrorWindow, createMainWindow } from "./MainRunner";
-import { macOSDisableDefaultMenuItem } from "./Menus";
+import { app, BrowserWindow } from "electron";
+import { createMainWindow, createErrorWindow } from "./windows";
+import { macOSDisableDefaultMenuItem } from "./menus";
+import * as constants from "./constants";
 
-let mainWindow;
-let errorWindow;
+let mainWindow: BrowserWindow;
 
-app.on("ready", () => {
+app.on("ready", async () => {
   macOSDisableDefaultMenuItem();
-
-  mainWindow = createMainWindow(mainWindow);
+  mainWindow = await createMainWindow();
 });
 
-app.on("activate", () => {
+app.on("activate", async () => {
   if (!mainWindow) {
-    mainWindow = createMainWindow(mainWindow);
+    mainWindow = await createMainWindow();
   }
 });
 
 app.on("window-all-closed", () => {
-  mainWindow = null;
-  errorWindow = null;
+  mainWindow = undefined;
 
-  if (!Constants.IS_MAC) {
+  if (!constants.IS_MAC) {
     app.quit();
   }
 });
 
-app.on("render-process-gone", () => {
-  errorWindow = createErrorWindow(errorWindow, mainWindow);
+app.on("render-process-gone", async () => {
+  await createErrorWindow(mainWindow);
 });
 
-process.on("uncaughtException", () => {
-  errorWindow = createErrorWindow(errorWindow, mainWindow);
+process.on("uncaughtException", async () => {
+  await createErrorWindow(mainWindow);
 });

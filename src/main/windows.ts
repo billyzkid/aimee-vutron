@@ -1,15 +1,19 @@
 import { app, BrowserWindow } from "electron";
 import { initializeIpc } from "./ipc";
-import * as constants from "./constants";
+import * as path from "path";
 
 export async function createMainWindow() {
   const mainWindow = new BrowserWindow({
-    title: constants.APP_NAME,
-    width: constants.IS_DEV ? 1500 : 1200,
+    title: import.meta.env.VITE_APP_NAME,
+    width: 1500,
     height: 650,
     useContentSize: true,
-    webPreferences: constants.DEFAULT_WEB_PREFERENCES,
-    show: false
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "../preload/index.js")
+    }
   });
 
   mainWindow.setMenu(null);
@@ -20,7 +24,7 @@ export async function createMainWindow() {
   });
 
   mainWindow.webContents.on("did-frame-finish-load", (): void => {
-    if (constants.IS_DEV) {
+    if (import.meta.env.DEV) {
       mainWindow.webContents.openDevTools();
     }
   });
@@ -32,10 +36,10 @@ export async function createMainWindow() {
     mainWindow.setAlwaysOnTop(false);
   });
 
-  if (constants.IS_DEV) {
-    await mainWindow.loadURL(constants.APP_INDEX_URL_DEV);
+  if (import.meta.env.DEV) {
+    await mainWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
   } else {
-    await mainWindow.loadFile(constants.APP_INDEX_URL_PROD);
+    await mainWindow.loadFile(path.join(__dirname, "../index.html"));
   }
 
   initializeIpc(mainWindow);
@@ -44,27 +48,31 @@ export async function createMainWindow() {
 }
 
 export async function createErrorWindow(mainWindow: BrowserWindow) {
-  if (!constants.IS_DEV) {
+  if (import.meta.env.PROD) {
     mainWindow?.hide();
   }
 
   const errorWindow = new BrowserWindow({
-    title: constants.APP_NAME,
-    resizable: constants.IS_DEV,
-    webPreferences: constants.DEFAULT_WEB_PREFERENCES,
-    show: false
+    title: import.meta.env.VITE_APP_NAME,
+    resizable: import.meta.env.DEV,
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "../preload/index.js")
+    }
   });
 
   errorWindow.setMenu(null);
 
-  if (constants.IS_DEV) {
-    await errorWindow.loadURL(`${constants.APP_INDEX_URL_DEV}#/error`);
+  if (import.meta.env.DEV) {
+    await errorWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL + "#/error");
   } else {
-    await errorWindow.loadFile(constants.APP_INDEX_URL_PROD, { hash: "error" });
+    await errorWindow.loadFile(path.join(__dirname, "../index.html"), { hash: "error" });
   }
 
   errorWindow.on("ready-to-show", (): void => {
-    if (mainWindow && !mainWindow.isDestroyed() && !constants.IS_DEV) {
+    if (mainWindow && !mainWindow.isDestroyed() && import.meta.env.PROD) {
       mainWindow.destroy();
     }
 
@@ -73,7 +81,7 @@ export async function createErrorWindow(mainWindow: BrowserWindow) {
   });
 
   errorWindow.webContents.on("did-frame-finish-load", (): void => {
-    if (constants.IS_DEV) {
+    if (import.meta.env.DEV) {
       errorWindow.webContents.openDevTools();
     }
   });

@@ -1,7 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import { createMainWindow, createErrorWindow } from "./windows";
 import { macOSDisableDefaultMenuItem } from "./menus";
-import * as constants from "./constants";
 
 let mainWindow: BrowserWindow;
 
@@ -19,7 +18,7 @@ app.on("activate", async () => {
 app.on("window-all-closed", () => {
   mainWindow = undefined;
 
-  if (!constants.IS_MAC) {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });

@@ -24,7 +24,7 @@
   "main": "./dist/main",
   "build": {
     "appId": "com.github.billyzkid.aimee-vutron",
-    "artifactName": "${name}-${version}-${os}-${arch}-setup.${ext}",
+    "artifactName": "${name}-setup-${version}-${os}-${arch}.${ext}",
     "files": [
       "./dist/**/*",
       "!./dist/builds"

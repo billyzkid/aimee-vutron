@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 // Whitelist of valid IPC channels used to send messages from renderer to main process
-const mainAvailChannels: string[] = ["msgRequestGetVersion", "msgOpenExternalLink"];
-const rendererAvailChannels: string[] = ["msgReceivedVersion"];
+const mainAvailChannels: string[] = ["msgRequestGetVersion", "msgRequestGetLocale", "msgOpenExternalLink"];
+const rendererAvailChannels: string[] = ["msgReceivedVersion", "msgReceivedLocale"];
 
 export interface MainApi {
   invoke: (channel: string, ...data: any[]) => Promise<any>;

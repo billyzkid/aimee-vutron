@@ -4,14 +4,13 @@
     "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
-    "noImplicitAny": false,
-    "skipLibCheck": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "jsx": "preserve",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./src", "./package.json", "./vite.config.ts"]
+  "include": ["src"]
 }

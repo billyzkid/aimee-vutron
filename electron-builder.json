@@ -3,6 +3,7 @@
   "artifactName": "${name}-setup-${version}-${os}-${arch}.${ext}",
   "files": ["dist", "!dist/builds"],
   "directories": {
+    "buildResources": "resources/build",
     "output": "dist/builds"
   }
 }

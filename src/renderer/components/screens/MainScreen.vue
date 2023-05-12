@@ -1,7 +1,6 @@
 <script setup lang="tsx">
   import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
-  import { openExternal } from "@/renderer/utils";
   import { useCounterStore } from "@/renderer/store/counter";
   import { storeToRefs } from "pinia";
   import { onMounted, ref } from "vue";
@@ -14,36 +13,40 @@
   const languages = ref(["en"]);
   const appVersion = ref("Unknown");
 
-  onMounted((): void => {
+  onMounted(() => {
     languages.value = availableLocales;
 
-    // Get application version
-    window.mainApi.receive("msgReceivedVersion", (event: Event, version: string) => {
-      appVersion.value = version;
+    window.mainApi.receive("msgReceivedVersion", (event: Event, value: string) => {
+      appVersion.value = value;
+    });
+
+    window.mainApi.receive("msgReceivedLocale", (event: Event, value: string) => {
+      locale.value = value;
     });
 
     window.mainApi.send("msgRequestGetVersion");
+    window.mainApi.send("msgRequestGetLocale");
   });
 
-  const handleChangeTheme = (): void => {
+  function handleChangeTheme() {
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
-  };
+  }
 
-  const handleChangeLanguage = (val: string): void => {
-    locale.value = val;
-  };
+  function handleChangeLanguage(value: string) {
+    locale.value = value;
+  }
 
-  const handleOpenDocument = async (): Promise<void> => {
-    await openExternal("https://vutron.jooy2.com");
-  };
+  function handleOpenDocument() {
+    window.mainApi.send("msgOpenExternalLink", "https://vutron.jooy2.com");
+  }
 
-  const handleOpenGitHub = async (): Promise<void> => {
-    await openExternal("https://github.com/jooy2/vutron");
-  };
+  function handleOpenGitHub() {
+    window.mainApi.send("msgOpenExternalLink", "https://github.com/jooy2/vutron");
+  }
 
-  const handleCountIncrease = (): void => {
+  function handleCountIncrease() {
     counterIncrease(1);
-  };
+  }
 </script>
 
 <template>

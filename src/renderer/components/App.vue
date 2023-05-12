@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-  import { DefaultLayout } from "@/renderer/components/layout";
+  import DefaultLayout from "@/renderer/components/layout/DefaultLayout.vue";
 </script>
 
 <template>

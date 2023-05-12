@@ -1,18 +1,19 @@
 <script setup lang="tsx">
-  import { useRoute, useRouter } from "vue-router";
+  import { useRouter, useRoute } from "vue-router";
 
   const router = useRouter();
   const route = useRoute();
-  const titleKey: string = (route?.meta?.titleKey || "title.main") as string;
+  const titleKey = (route?.meta?.titleKey || "title.main") as string;
 
-  const handleRoute = (path: string): void => {
+  function handleRoute(path: string) {
     router.push(path);
-  };
+  }
 
-  const isCurrentRoute = (path: string): boolean => {
+  function isCurrentRoute(path: string) {
     return path === route.path;
-  };
+  }
 </script>
+
 <template>
   <v-app-bar color="primary" density="compact">
     <v-app-bar-title>{{ $t(titleKey) }}</v-app-bar-title>
@@ -31,6 +32,7 @@
     </template>
   </v-app-bar>
 </template>
+
 <style scoped>
   .v-btn {
     opacity: 0.4;

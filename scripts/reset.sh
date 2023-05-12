@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-# Resets the repository and its submodules to a clean state
+# Cleans and resets the working tree of the repository
+# and its submodules to the latest commit
+#
+# References:
+# https://git-scm.com/docs
+# https://gist.github.com/nicktoumpelis/11214362
+# https://gitlab.com/gitlab-org/gitlab/-/issues/331042
 
 # Change the current working directory ($PWD) to the root of the
 # repository to ensure this script always behaves consistently
@@ -59,7 +65,6 @@ pets () {
 
 # Check if there are any uncommitted changes in the repository
 # If so, display the status and request confirmation to proceed
-# Reference: https://git-scm.com/docs/git-status
 if [ -n "$(git status --porcelain)" ]; then
   git status
   confirm "Warning! This will obliterate the changes shown above. Should I proceed? (y/n)" \
@@ -68,35 +73,37 @@ fi
 
 # Set step variables
 step_cur=0
-step_max=5
+step_max=6
 
-# Ensure the submodules have been initialized
-# Reference: https://git-scm.com/docs/git-submodule
+# Remove untracked files from the repository
+# Note the use of double --force options is intentional
+step "Cleaning repository..."
+  git clean -d -x --force --force
+  git submodule foreach --recursive git clean -d -x --force --force
+pets
+
+# Ensure the submodules are initialized
+# Note this must occur prior to synchronizing below
 step "Initializing submodules..."
   git submodule init
 pets
 
-# Synchronize the submodule URLs with the remote
-# Reference: https://git-scm.com/docs/git-submodule
+# Synchronize the submodules with the remote .gitmodules file
 step "Synchronizing submodules..."
   git submodule sync --recursive
 pets
 
-# Update the working tree for each submodule
-# Reference: https://git-scm.com/docs/git-submodule
+# Update the submodules
 step "Updating submodules..."
-  git submodule update --force --recursive
+  git submodule update --init --force --recursive
 pets
 
-# Reset the repository to the previous commit
-# Reference: https://git-scm.com/docs/git-reset
+# Reset the repository to the latest commit
 step "Resetting repository..."
   git reset --hard --recurse-submodules
 pets
 
-# Delete untracked files from the repository
-# Note the double --force options are intentional
-# Reference: https://git-scm.com/docs/git-clean
+# Clean again to ensure no untracked files remain
 step "Cleaning repository..."
   git clean -d -x --force --force
   git submodule foreach --recursive git clean -d -x --force --force

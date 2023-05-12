@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Resets the repository to a clean state
+# Resets the repository and its submodules to a clean state
 
 # Change the current working directory ($PWD) to the root of the
 # repository to ensure this script always behaves consistently
@@ -68,29 +68,36 @@ fi
 
 # Set step variables
 step_cur=0
-step_max=4
+step_max=5
 
-# Reset the repository to the previous commit
-# Reference: https://git-scm.com/docs/git-reset
-step "Resetting working tree and submodules..."
-  git reset --hard --recurse-submodules
+# Ensure the submodules have been initialized
+# Reference: https://git-scm.com/docs/git-submodule
+step "Initializing submodules..."
+  git submodule init
 pets
 
-# Synchronize the submodules URLs with the remote
+# Synchronize the submodule URLs with the remote
 # Reference: https://git-scm.com/docs/git-submodule
 step "Synchronizing submodules..."
   git submodule sync --recursive
 pets
 
-# Update the submodules
+# Update the working tree for each submodule
 # Reference: https://git-scm.com/docs/git-submodule
 step "Updating submodules..."
-  git submodule update --init --force --recursive
+  git submodule update --force --recursive
+pets
+
+# Reset the repository to the previous commit
+# Reference: https://git-scm.com/docs/git-reset
+step "Resetting repository..."
+  git reset --hard --recurse-submodules
 pets
 
 # Delete untracked files from the repository
+# Note the double --force options are intentional
 # Reference: https://git-scm.com/docs/git-clean
-step "Cleaning working tree and submodules..."
+step "Cleaning repository..."
   git clean -d -x --force --force
   git submodule foreach --recursive git clean -d -x --force --force
 pets

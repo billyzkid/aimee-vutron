@@ -7,8 +7,9 @@ import "@mdi/font/css/materialdesignicons.min.css";
 
 export default createVuetify({
   locale: {
-    messages: { de, en, es, fr, ja, ko, pt, ru, zhHans, zhHant },
-    locale: "en"
+    locale: "en",
+    fallback: "en",
+    messages: { de, en, es, fr, ja, ko, pt, ru, zhHans, zhHant }
   },
   icons: {
     defaultSet: "mdi",

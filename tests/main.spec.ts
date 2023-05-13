@@ -1,4 +1,4 @@
-import { vi, beforeEach, test, expect, type MockedClass } from "vitest";
+import { vi, test, expect, beforeEach, MockedClass } from "vitest";
 import { BrowserWindow } from "electron";
 import { createMainWindow, restoreOrCreateWindow } from "../src/main/windows";
 

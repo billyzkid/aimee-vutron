@@ -1,21 +1,17 @@
 import { BrowserWindow } from "electron";
-import { initializeIpc } from "./ipc";
 import * as path from "path";
 
 // Creates and initializes the main application window
 export async function createMainWindow() {
   // Create the window
   const mainWindow = new BrowserWindow({
+    show: false,
     title: import.meta.env.VITE_APP_NAME,
     width: import.meta.env.DEV ? 1500 : 1200, // Accomodate the dev tools
     height: 650,
     useContentSize: true,
-    show: false,
     webPreferences: {
-      preload: path.join(__dirname, "../preload/index.js"),
-      nodeIntegration: false,
-      contextIsolation: true
-      //sandbox: false
+      preload: path.join(__dirname, "../preload/index.js")
     }
   });
 
@@ -41,8 +37,6 @@ export async function createMainWindow() {
   } else {
     await mainWindow.loadFile(path.join(__dirname, "../index.html"));
   }
-
-  initializeIpc(mainWindow);
 
   return mainWindow;
 }

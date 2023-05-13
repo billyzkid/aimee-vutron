@@ -1,35 +1,21 @@
 <script setup lang="tsx">
-  import { storeToRefs } from "pinia";
   import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
   import { useCounter } from "../../store/counter";
-  import { onMounted, ref } from "vue";
+  import { storeToRefs } from "pinia";
+  import { ref } from "vue";
 
   const { locale, availableLocales } = useI18n();
   const theme = useTheme();
   const counter = useCounter();
 
   const { count } = storeToRefs(counter);
-  const languages = ref(["en"]);
-  const version = ref("Unknown");
-
-  onMounted(() => {
-    languages.value = availableLocales;
-
-    window.mainApi.receive("msgReceivedVersion", (event: Event, value: string) => {
-      version.value = value;
-    });
-
-    window.mainApi.receive("msgReceivedLocale", (event: Event, value: string) => {
-      locale.value = value;
-    });
-
-    window.mainApi.send("msgRequestGetVersion");
-    window.mainApi.send("msgRequestGetLocale");
-  });
+  const language = ref(locale);
+  const availableLanguages = ref(availableLocales);
+  const appVersion = ref(import.meta.env.VITE_APP_VERSION);
 
   function handleChangeLanguage(value: string) {
-    locale.value = value;
+    language.value = value;
   }
 
   function handleChangeTheme() {
@@ -41,11 +27,11 @@
   }
 
   function handleOpenDocument() {
-    window.mainApi.send("msgOpenExternalLink", "https://vutron.jooy2.com");
+    window.mainApi.openExternalUrl("https://vutron.jooy2.com");
   }
 
   function handleOpenGitHub() {
-    window.mainApi.send("msgOpenExternalLink", "https://github.com/jooy2/vutron");
+    window.mainApi.openExternalUrl("https://github.com/jooy2/vutron");
   }
 </script>
 
@@ -59,7 +45,7 @@
         <h2 class="my-4">{{ $t("desc.welcome-title") }}</h2>
         <p>{{ $t("desc.welcome-desc") }}</p>
         <p class="my-4">
-          App Version: <strong>{{ version }}</strong>
+          App Version: <strong>{{ appVersion }}</strong>
         </p>
         <v-row class="my-4">
           <v-col cols="3">
@@ -99,9 +85,9 @@
           <v-col cols="12">
             <v-select
               density="compact"
-              :model-value="locale"
               :label="$t('menu.change-language')"
-              :items="languages"
+              :model-value="language"
+              :items="availableLanguages"
               @update:model-value="handleChangeLanguage">
               {{ $t("menu.change-language") }}
             </v-select>

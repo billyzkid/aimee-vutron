@@ -1,18 +1,5 @@
-import { BrowserWindow, ipcMain, app, shell } from "electron";
+import { ipcMain, app, shell } from "electron";
 
-export function initializeIpc(window: BrowserWindow) {
-  // Get application version
-  ipcMain.on("msgRequestGetVersion", () => {
-    window.webContents.send("msgReceivedVersion", import.meta.env.VITE_APP_VERSION);
-  });
+ipcMain.handle("get-locale", () => app.getLocale());
 
-  // Get application locale
-  ipcMain.on("msgRequestGetLocale", () => {
-    window.webContents.send("msgReceivedLocale", app.getLocale().split("-")[0]);
-  });
-
-  // Open url via web browser
-  ipcMain.on("msgOpenExternalLink", async (event, url: string) => {
-    await shell.openExternal(url);
-  });
-}
+ipcMain.handle("open-external-url", (_, url: string) => shell.openExternal(url));

@@ -1,5 +1,6 @@
 import { app } from "electron";
 import { createMainWindow, restoreOrCreateWindow } from "./windows";
+import "./ipc";
 import "./security";
 
 // Prevent multiple instances of the app

@@ -22,30 +22,30 @@ app
 // Install the Vue DevTools extension in development
 // Note this requires the `electron-devtools-installer` dev dependency
 // See https://devtools.vuejs.org/
-if (import.meta.env.DEV) {
-  app
-    .whenReady()
-    .then(async () => {
-      const { default: installExtension, VUEJS3_DEVTOOLS } = await import("electron-devtools-installer");
-      return await installExtension(VUEJS3_DEVTOOLS);
-    })
-    .catch((x) => console.error("Failed to install the Vue DevTools extension.", x));
-}
+// if (import.meta.env.DEV) {
+//   app
+//     .whenReady()
+//     .then(async () => {
+//       const { default: installExtension, VUEJS3_DEVTOOLS } = await import("electron-devtools-installer");
+//       return await installExtension(VUEJS3_DEVTOOLS);
+//     })
+//     .catch((x) => console.error("Failed to install the Vue DevTools extension.", x));
+// }
 
 // Check for app updates in production
 // Note this requires the `electron-updater` dependency
 // Note this may throw if the app is not yet published or configured for debugging
 // See https://www.electron.build/auto-update.html#quick-setup-guide
 // See https://www.electron.build/auto-update.html#debugging
-if (import.meta.env.PROD) {
-  app
-    .whenReady()
-    .then(async () => {
-      const { autoUpdater } = await import("electron-updater");
-      return await autoUpdater.checkForUpdatesAndNotify();
-    })
-    .catch((x) => console.error("Failed to check for app updates.", x));
-}
+// if (import.meta.env.PROD) {
+//   app
+//     .whenReady()
+//     .then(async () => {
+//       const { autoUpdater } = await import("electron-updater");
+//       return await autoUpdater.checkForUpdatesAndNotify();
+//     })
+//     .catch((x) => console.error("Failed to check for app updates.", x));
+// }
 
 // Ensure a window is open when the app is activated
 app.on("activate", () => {

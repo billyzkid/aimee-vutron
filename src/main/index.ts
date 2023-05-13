@@ -20,14 +20,14 @@ app
   .catch((x) => console.error("Failed to create window.", x));
 
 // Install the Vue DevTools extension in development
-// Note this requires the `electron-devtools-installer` dev dependency
+// Note this requires the `electron-devtools-assembler` dev dependency
 // See https://devtools.vuejs.org/
 // if (import.meta.env.DEV) {
 //   app
 //     .whenReady()
 //     .then(async () => {
-//       const { default: installExtension, VUEJS3_DEVTOOLS } = await import("electron-devtools-installer");
-//       return await installExtension(VUEJS3_DEVTOOLS);
+//       const { default: installExtension, VUEJS_DEVTOOLS } = await import("electron-devtools-assembler");
+//       return await installExtension(VUEJS_DEVTOOLS);
 //     })
 //     .catch((x) => console.error("Failed to install the Vue DevTools extension.", x));
 // }

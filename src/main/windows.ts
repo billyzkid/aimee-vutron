@@ -35,7 +35,7 @@ export async function createMainWindow() {
   if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
     await mainWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
   } else {
-    await mainWindow.loadFile(path.join(__dirname, "../index.html"));
+    await mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
 
   return mainWindow;

@@ -27,14 +27,15 @@
     "dev:debug": "vite --debug",
     "deploy": "vite build",
     "deploy:debug": "vite build --debug",
+    "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .js,.ts,.vue",
     "lint:fix": "eslint . --ext .js,.ts,.vue --fix",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "test": "vitest run main preload renderer",
     "test:e2e": "npm run build && vitest run e2e",
-    "build": "npm-run-all clean lint deploy && electron-builder",
-    "build:dir": "npm-run-all clean lint deploy && electron-builder --dir",
+    "build": "npm-run-all clean lint typecheck deploy && electron-builder",
+    "build:dir": "npm-run-all clean lint typecheck deploy && electron-builder --dir",
     "clean": "bash ./scripts/clean.sh",
     "reset": "bash ./scripts/reset.sh"
   },
@@ -52,6 +53,7 @@
     "@typescript-eslint/parser": "^5.59.1",
     "@vitejs/plugin-vue": "^4.2.1",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "@vue/test-utils": "^2.3.2",
     "electron": "^24.3.0",
     "electron-builder": "^24.4.0",
     "eslint": "^8.39.0",
@@ -67,6 +69,7 @@
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-vuetify": "^1.0.2",
     "vitest": "^0.31.0",
-    "vue-eslint-parser": "^9.1.1"
+    "vue-eslint-parser": "^9.1.1",
+    "vue-tsc": "^1.6.4"
   }
 }

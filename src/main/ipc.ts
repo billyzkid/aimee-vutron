@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, shell, app } from "electron";
+import { BrowserWindow, ipcMain, app, shell } from "electron";
 
 export function initializeIpc(window: BrowserWindow) {
   // Get application version

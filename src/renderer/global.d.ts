@@ -1,4 +1,4 @@
-import { MainApi } from "@/preload";
+import { MainApi } from "../preload";
 
 declare global {
   interface Window {

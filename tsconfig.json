@@ -5,12 +5,9 @@
     "moduleResolution": "node",
     "strict": true,
     "isolatedModules": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "jsx": "preserve",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }

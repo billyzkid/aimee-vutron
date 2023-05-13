@@ -30,9 +30,6 @@ export default defineConfig(async ({ command, mode }) => {
       minify,
       sourcemap
     },
-    resolve: {
-      alias: { "@": path.resolve("./src") }
-    },
     plugins: [
       vue(),
       vueJsx(),

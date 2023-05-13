@@ -1,31 +1,26 @@
-import { vi, beforeEach, test, expect, MockedClass } from "vitest";
+import { vi, beforeEach, test, expect, type MockedClass } from "vitest";
 import { BrowserWindow } from "electron";
-// import { createMainWindow, restoreOrCreateWindow } from "../src/windows";
+import { createMainWindow, restoreOrCreateWindow } from "../src/main/windows";
 
 vi.mock("electron", () => {
-  // Mock the Electron app
-  const app: Pick<Electron.App, "getAppPath"> = {
-    getAppPath(): string {
-      return "";
-    }
+  // Mock the BrowserWindow type
+  const MockedBrowserWindow = vi.fn() as unknown as MockedClass<typeof BrowserWindow>;
+  MockedBrowserWindow.getAllWindows = vi.fn(() => MockedBrowserWindow.mock.instances);
+  MockedBrowserWindow.prototype.setMenuBarVisibility = vi.fn();
+  MockedBrowserWindow.prototype.on = vi.fn().mockReturnThis();
+  MockedBrowserWindow.prototype.loadURL = vi.fn().mockReturnValue(Promise.resolve());
+  MockedBrowserWindow.prototype.loadFile = vi.fn().mockReturnValue(Promise.resolve());
+  MockedBrowserWindow.prototype.isDestroyed = vi.fn();
+  MockedBrowserWindow.prototype.isMinimized = vi.fn();
+  MockedBrowserWindow.prototype.restore = vi.fn();
+  MockedBrowserWindow.prototype.focus = vi.fn();
+
+  // Mock ipcMain
+  const ipcMain = {
+    on: vi.fn().mockReturnThis()
   };
 
-  // Mock the BrowserWindow class
-  const MockedBrowserWindow = vi.fn() as unknown as MockedClass<typeof BrowserWindow>;
-  // MockedBrowserWindow.getAllWindows = vi.fn(() => MockedBrowserWindow.mock.instances);
-  // MockedBrowserWindow.prototype.destroy = vi.fn();
-  // MockedBrowserWindow.prototype.isDestroyed = vi.fn();
-  // MockedBrowserWindow.prototype.isMinimized = vi.fn();
-  // MockedBrowserWindow.prototype.focus = vi.fn();
-  // MockedBrowserWindow.prototype.restore = vi.fn();
-  // MockedBrowserWindow.prototype.loadURL = vi.fn((_: string, __?: Electron.LoadURLOptions) => Promise.resolve());
-  // MockedBrowserWindow.prototype.loadFile = vi.fn((_: string, __?: Electron.LoadFileOptions) => Promise.resolve());
-
-  // Suppress lint warnings for overloaded method
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments, @typescript-eslint/no-explicit-any
-  // MockedBrowserWindow.prototype.on = vi.fn<any>();
-
-  return { app, BrowserWindow: MockedBrowserWindow };
+  return { BrowserWindow: MockedBrowserWindow, ipcMain };
 });
 
 beforeEach(() => {
@@ -33,13 +28,55 @@ beforeEach(() => {
 });
 
 test("Should create a new window", async () => {
-  expect(true).toBe(true);
+  const { mock } = vi.mocked(BrowserWindow);
+  expect(mock.instances).toHaveLength(0);
+
+  // Create a window
+  await createMainWindow();
+  expect(mock.instances).toHaveLength(1);
+
+  // Ensure the content was loaded
+  const window = vi.mocked(mock.instances[0]);
+  expect(window.loadURL.mock.calls.length + window.loadFile.mock.calls.length).toBe(1);
+
+  if (window.loadURL.mock.calls.length === 1) {
+    expect(window.loadURL).toHaveBeenCalledWith(expect.stringMatching(/index\.html$/));
+  } else {
+    expect(window.loadFile).toHaveBeenCalledWith(expect.stringMatching(/index\.html$/));
+  }
 });
 
 test("Should create a new window if the previous one was destroyed", async () => {
-  expect(true).toBe(true);
+  const { mock } = vi.mocked(BrowserWindow);
+  expect(mock.instances).toHaveLength(0);
+
+  // Create a window
+  await createMainWindow();
+  expect(mock.instances).toHaveLength(1);
+
+  // Destroy the window
+  const window = vi.mocked(mock.instances[0]);
+  window.isDestroyed.mockReturnValueOnce(true);
+
+  // Create another window
+  await restoreOrCreateWindow();
+  expect(mock.instances).toHaveLength(2);
 });
 
 test("Should restore an existing window", async () => {
-  expect(true).toBe(true);
+  const { mock } = vi.mocked(BrowserWindow);
+  expect(mock.instances).toHaveLength(0);
+
+  // Create a window
+  await createMainWindow();
+  expect(mock.instances).toHaveLength(1);
+
+  // Minimize the window
+  const window = vi.mocked(mock.instances[0]);
+  window.isMinimized.mockReturnValueOnce(true);
+
+  // Restore the window
+  await restoreOrCreateWindow();
+  expect(mock.instances).toHaveLength(1);
+  expect(window.restore).toHaveBeenCalledOnce();
 });

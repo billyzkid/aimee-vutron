@@ -1,7 +1,7 @@
 <script setup lang="tsx">
   import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
-  import { useCounterStore } from "@/renderer/store/counter";
+  import { useCounterStore } from "../../store/counter";
   import { storeToRefs } from "pinia";
   import { onMounted, ref } from "vue";
 

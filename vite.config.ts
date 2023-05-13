@@ -15,6 +15,7 @@ export default defineConfig(async ({ command, mode }) => {
   process.env.VITE_APP_NAME = productName;
   process.env.VITE_APP_VERSION = version;
 
+  const target = "esnext";
   const minify = mode === "production" ? "esbuild" : false;
   const sourcemap = mode === "development" ? "inline" : false;
   const startupArgv = command === "serve" ? [".", "--no-sandbox"] : undefined;
@@ -26,48 +27,51 @@ export default defineConfig(async ({ command, mode }) => {
   return {
     root: path.resolve("./src/renderer"),
     build: {
-      outDir: path.resolve("./dist"),
+      target,
       minify,
-      sourcemap
+      sourcemap,
+      outDir: path.resolve("./dist"),
     },
     plugins: [
       vue(),
       vueJsx(),
       vueI18n({
-        include: [path.resolve("./resources/locales/**")]
+        include: [path.resolve("./resources/locales/*.json")]
       }),
       vuetify(),
       eslint(),
       electron([
         {
           // Main configuration
-          onstart: (options) => options.startup(startupArgv),
           entry: path.resolve("./src/main/index.ts"),
           vite: {
             build: {
-              outDir: path.resolve("./dist/main"),
+              target,
               minify,
               sourcemap,
+              outDir: path.resolve("./dist/main"),
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
             }
-          }
+          },
+          onstart: (options) => options.startup(startupArgv)
         },
         {
           // Preload configuration
-          onstart: (options) => options.reload(),
           entry: path.resolve("./src/preload/index.ts"),
           vite: {
             build: {
-              outDir: path.resolve("./dist/preload"),
+              target,
               minify,
               sourcemap,
+              outDir: path.resolve("./dist/preload"),
               rollupOptions: {
                 external: ["electron", ...builtinModules]
               }
             }
-          }
+          },
+          onstart: (options) => options.reload()
         }
       ]),
       renderer()

@@ -1,23 +1,23 @@
 <script setup lang="tsx">
+  import { storeToRefs } from "pinia";
   import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
-  import { useCounterStore } from "../../store/counter";
-  import { storeToRefs } from "pinia";
+  import { useCounter } from "../../store/counter";
   import { onMounted, ref } from "vue";
 
   const { locale, availableLocales } = useI18n();
-  const { counterIncrease } = useCounterStore();
-  const { counter } = storeToRefs(useCounterStore());
   const theme = useTheme();
+  const counter = useCounter();
 
+  const { count } = storeToRefs(counter);
   const languages = ref(["en"]);
-  const appVersion = ref("Unknown");
+  const version = ref("Unknown");
 
   onMounted(() => {
     languages.value = availableLocales;
 
     window.mainApi.receive("msgReceivedVersion", (event: Event, value: string) => {
-      appVersion.value = value;
+      version.value = value;
     });
 
     window.mainApi.receive("msgReceivedLocale", (event: Event, value: string) => {
@@ -28,12 +28,16 @@
     window.mainApi.send("msgRequestGetLocale");
   });
 
+  function handleChangeLanguage(value: string) {
+    locale.value = value;
+  }
+
   function handleChangeTheme() {
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
   }
 
-  function handleChangeLanguage(value: string) {
-    locale.value = value;
+  function handleIncreaseCount() {
+    counter.increaseCount(1);
   }
 
   function handleOpenDocument() {
@@ -42,10 +46,6 @@
 
   function handleOpenGitHub() {
     window.mainApi.send("msgOpenExternalLink", "https://github.com/jooy2/vutron");
-  }
-
-  function handleCountIncrease() {
-    counterIncrease(1);
   }
 </script>
 
@@ -59,7 +59,7 @@
         <h2 class="my-4">{{ $t("desc.welcome-title") }}</h2>
         <p>{{ $t("desc.welcome-desc") }}</p>
         <p class="my-4">
-          App Version: <strong>{{ appVersion }}</strong>
+          App Version: <strong>{{ version }}</strong>
         </p>
         <v-row class="my-4">
           <v-col cols="3">
@@ -71,8 +71,8 @@
             </v-btn>
           </v-col>
           <v-col cols="3">
-            <v-badge color="blue" :content="counter">
-              <v-btn icon color="primary" @click="handleCountIncrease">
+            <v-badge color="blue" :content="count">
+              <v-btn icon color="primary" @click="handleIncreaseCount">
                 <v-icon icon="mdi-plus-circle" />
                 <v-tooltip activator="parent" location="bottom">
                   {{ $t("menu.increase-count") }}
@@ -98,12 +98,11 @@
           </v-col>
           <v-col cols="12">
             <v-select
-              :model-value="locale"
               density="compact"
+              :model-value="locale"
               :label="$t('menu.change-language')"
               :items="languages"
-              @update:model-value="handleChangeLanguage"
-            >
+              @update:model-value="handleChangeLanguage">
               {{ $t("menu.change-language") }}
             </v-select>
           </v-col>

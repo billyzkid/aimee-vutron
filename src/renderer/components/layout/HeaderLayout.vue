@@ -25,8 +25,7 @@
         prepend-icon="mdi-fit-to-screen-outline"
         variant="text"
         :class="{ active: isCurrentRoute('/second') }"
-        @click="handleRoute('/second')"
-      >
+        @click="handleRoute('/second')">
         {{ $t("title.second") }}
       </v-btn>
     </template>

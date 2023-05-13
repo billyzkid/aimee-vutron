@@ -5,8 +5,11 @@ const mainAvailChannels: string[] = ["msgRequestGetVersion", "msgRequestGetLocal
 const rendererAvailChannels: string[] = ["msgReceivedVersion", "msgReceivedLocale"];
 
 export interface MainApi {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   invoke: (channel: string, ...data: any[]) => Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   send: (channel: string, ...data: any[]) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   receive: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void;
 }
 

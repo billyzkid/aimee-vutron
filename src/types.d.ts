@@ -7,3 +7,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface MainApi {
+  getLocale(): Promise<string>;
+  openExternalUrl(url: string): Promise<void>;
+}

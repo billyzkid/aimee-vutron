@@ -1,9 +1,10 @@
 <script setup lang="tsx">
+  import { computed } from "vue";
   import { useRouter, useRoute } from "vue-router";
 
   const router = useRouter();
   const route = useRoute();
-  const titleKey = (route?.meta?.titleKey || "title.main") as string;
+  const titleKey = computed(() => (route.meta.titleKey || "title.main") as string);
 
   function handleRoute(path: string) {
     router.push(path);
@@ -18,11 +19,15 @@
   <v-app-bar color="primary" density="compact">
     <v-app-bar-title>{{ $t(titleKey) }}</v-app-bar-title>
     <template #append>
-      <v-btn prepend-icon="mdi-home" variant="text" :class="{ active: isCurrentRoute('/') }" @click="handleRoute('/')">
+      <v-btn
+        prepend-icon="mdi-home-floor-1"
+        variant="text"
+        :class="{ active: isCurrentRoute('/') }"
+        @click="handleRoute('/')">
         {{ $t("title.main") }}
       </v-btn>
       <v-btn
-        prepend-icon="mdi-fit-to-screen-outline"
+        prepend-icon="mdi-home-floor-2"
         variant="text"
         :class="{ active: isCurrentRoute('/second') }"
         @click="handleRoute('/second')">

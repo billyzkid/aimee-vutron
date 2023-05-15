@@ -34,8 +34,8 @@
     "format:fix": "prettier . --write",
     "test": "vitest run main preload renderer",
     "test:e2e": "npm run build && vitest run e2e",
-    "build": "npm-run-all clean lint typecheck deploy && electron-builder",
-    "build:dir": "npm-run-all clean lint typecheck deploy && electron-builder --dir",
+    "build": "npm-run-all clean lint typecheck test deploy && electron-builder",
+    "build:dir": "npm-run-all clean lint typecheck test deploy && electron-builder --dir",
     "clean": "bash ./scripts/clean.sh",
     "reset": "bash ./scripts/reset.sh"
   },

@@ -22,8 +22,8 @@
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
   }
 
-  function handleIncreaseCount() {
-    counter.increaseCount(1);
+  function handleIncrementCount() {
+    counter.incrementCount();
   }
 
   function handleOpenDocument() {
@@ -56,10 +56,10 @@
           </v-col>
           <v-col cols="3">
             <v-badge color="blue" :content="count">
-              <v-btn icon color="primary" @click="handleIncreaseCount">
+              <v-btn icon color="primary" @click="handleIncrementCount">
                 <v-icon icon="mdi-plus-circle" />
                 <v-tooltip activator="parent" location="bottom">
-                  {{ $t("menu.increase-count") }}
+                  {{ $t("menu.increment-count") }}
                 </v-tooltip>
               </v-btn>
             </v-badge>

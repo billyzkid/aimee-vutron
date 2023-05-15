@@ -1,9 +1,9 @@
 {
   "desc": {
     "welcome-title": "Hallo Vutron! Alles ist bereit.",
-    "welcome-desc": "Sie können jetzt plattformübergreifende Webanwendungen schreiben. Sehen Sie Ihre Änderungen in Echtzeit und erstellen Sie mit einem einzigen Befehl auf mehreren Plattformen. Wenn Sie damit noch nicht vertraut sind, können Sie Hilfe von der Dokumentationsseite unten erhalten oder vorgefertigten Beispielcode ausführen.",
-    "second-desc": "Auf den zweiten Bildschirm verschoben! Hier gibt es keine!",
-    "app-version": "Version der App: {0}"
+    "welcome-desc": "Sie können jetzt plattformübergreifende Webanwendungen schreiben. Sehen Sie Ihre Änderungen in Echtzeit und erstellen Sie auf mehreren Plattformen mit einem einzigen Befehl. Wenn Sie damit noch nicht vertraut sind, können Sie Hilfe von der untenstehenden Dokumentationsseite erhalten oder vorgefertigten Beispielcode ausführen.",
+    "second-desc": "Zum zweiten Bildschirm gewechselt! Hier gibt es nichts!",
+    "app-version": "App-Version: {0}"
   },
   "title": {
     "main": "Hauptbildschirm",
@@ -12,8 +12,8 @@
   "menu": {
     "change-theme": "Thema wechseln",
     "change-language": "Sprache ändern",
-    "increase-count": "Zählerstand um 1 erhöhen",
-    "documentation": "dokumentieren",
+    "increment-count": "Zählerstand erhöhen",
+    "documentation": "Dokumentation",
     "github": "Quellcode"
   }
 }

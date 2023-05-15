@@ -1,9 +1,9 @@
 {
   "desc": {
     "welcome-title": "Hello Vutron! Everything is ready.",
-    "welcome-desc": "You can now write cross-platform web applications. See changes in real time and build to multiple platforms with one command. If you're not already familiar with it, you can get help from the documentation page below, or run some pre-written example code.",
+    "welcome-desc": "You can now write cross-platform Web applications. See changes in real time and build to multiple platforms with one command. If you're not already familiar with it, you can get help from the documentation page below, or run some pre-written example code.",
     "second-desc": "You have moved to the second screen! There is nothing here!",
-    "app-version": "App Version: {0}"
+    "app-version": "App version: {0}"
   },
   "title": {
     "main": "Main Screen",
@@ -12,7 +12,7 @@
   "menu": {
     "change-theme": "Change Theme",
     "change-language": "Change Language",
-    "increase-count": "Count 1 increment",
+    "increment-count": "Increment Count",
     "documentation": "Documentation",
     "github": "Source Code"
   }

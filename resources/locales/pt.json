@@ -2,12 +2,12 @@
   "desc": {
     "welcome-title": "Olá Vutron! Tudo está pronto.",
     "welcome-desc": "Agora você pode escrever aplicativos da Web de plataforma cruzada. Veja suas alterações em tempo real e crie para várias plataformas com um único comando. Se ainda não estiver familiarizado com ele, você pode obter ajuda na página de documentação abaixo ou executar algum código de exemplo pré-escrito.",
-    "second-desc": "Movido para a segunda tela! Não há nenhum aqui!"
+    "second-desc": "Movido para a segunda tela! Não há nenhum aqui!",
+    "app-version": "Versão do App: {0}"
   },
   "title": {
     "main": "Tela principal",
-    "second": "Segunda tela",
-    "error": "Erro desconhecido"
+    "second": "Segunda tela"
   },
   "menu": {
     "change-theme": "Mudar Tema",

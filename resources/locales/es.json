@@ -2,12 +2,12 @@
   "desc": {
     "welcome-title": "Hola Vutron! Todo está listo.",
     "welcome-desc": "Ahora puede escribir aplicaciones web multiplataforma. Vea sus cambios en tiempo real y cree en múltiples plataformas con un solo comando. Si aún no está familiarizado con él, puede obtener ayuda en la página de documentación a continuación o ejecutar un código de ejemplo preescrito.",
-    "second-desc": "¡Movido a la segunda pantalla! ¡Aquí no hay ninguno!"
+    "second-desc": "¡Movido a la segunda pantalla! ¡Aquí no hay ninguno!",
+    "app-version": "Versión de la App: {0}"
   },
   "title": {
     "main": "Pantalla principal",
-    "second": "segunda pantalla",
-    "error": "Se produjo un error"
+    "second": "segunda pantalla"
   },
   "menu": {
     "change-theme": "cambiar de tema",

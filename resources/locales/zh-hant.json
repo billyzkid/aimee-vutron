@@ -1,19 +1,19 @@
 {
-  "desc": {
-    "welcome-title": "您好，Vutron！一切都已準備就緒。",
-    "welcome-desc": "現在，您可以創建跨平台的Web應用程序。即時查看變更，並用一個命令在多個平台上構建。如果您還不熟悉，可以在下面的文件頁面找到幫助，或者嘗試運行一些預先創建的示例代碼。",
-    "second-desc": "您已經移動到了第二個屏幕！這裡什麼都沒有！",
-    "app-version": "應用程序版本：{0}"
+  "main-screen": {
+    "title": "主屏幕",
+    "greeting": "您好，Vutron！一切都已準備就緒。",
+    "description": "現在，您可以創建跨平台的Web應用程序。即時查看變更，並用一個命令在多個平台上構建。如果您還不熟悉，可以在下面的文件頁面找到幫助，或者嘗試運行一些預先創建的示例代碼。",
+    "version": "應用程序版本：{0}",
+    "menu": {
+      "change-theme": "更換主題",
+      "change-language": "更換語言",
+      "increment-count": "增加計數",
+      "documentation": "文檔",
+      "source-code": "源代碼"
+    }
   },
-  "title": {
-    "main": "主屏幕",
-    "second": "第二個屏幕"
-  },
-  "menu": {
-    "change-theme": "更換主題",
-    "change-language": "更換語言",
-    "increment-count": "增加計數",
-    "documentation": "文檔",
-    "github": "源代碼"
+  "second-screen": {
+    "title": "第二個屏幕",
+    "description": "您已經移動到了第二個屏幕！這裡什麼都沒有！"
   }
 }

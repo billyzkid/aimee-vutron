@@ -4,7 +4,7 @@
 
   const router = useRouter();
   const route = useRoute();
-  const titleKey = computed(() => (route.meta.titleKey || "title.main") as string);
+  const titleKey = computed(() => (route.meta.titleKey || "main-screen.title") as string);
 
   function handleRoute(path: string) {
     router.push(path);
@@ -24,14 +24,14 @@
         variant="text"
         :class="{ active: isCurrentRoute('/') }"
         @click="handleRoute('/')">
-        {{ $t("title.main") }}
+        {{ $t("main-screen.title") }}
       </v-btn>
       <v-btn
         prepend-icon="mdi-home-floor-2"
         variant="text"
         :class="{ active: isCurrentRoute('/second') }"
         @click="handleRoute('/second')">
-        {{ $t("title.second") }}
+        {{ $t("second-screen.title") }}
       </v-btn>
     </template>
   </v-app-bar>

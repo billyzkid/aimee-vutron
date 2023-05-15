@@ -9,14 +9,14 @@ export default createRouter({
       path: "/",
       component: MainScreen,
       meta: {
-        titleKey: "title.main"
+        titleKey: "main-screen.title"
       }
     },
     {
       path: "/second",
       component: SecondScreen,
       meta: {
-        titleKey: "title.second"
+        titleKey: "second-screen.title"
       }
     },
     {

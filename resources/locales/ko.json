@@ -1,19 +1,19 @@
 {
-  "desc": {
-    "welcome-title": "안녕하세요, Vutron! 모든 준비가 완료되었습니다.",
-    "welcome-desc": "이제 크로스플랫폼 웹 애플리케이션을 개발할 수 있습니다. 변경사항을 실시간으로 확인하고, 단일 명령어로 여러 플랫폼에 빌드할 수 있습니다. 아직 익숙하지 않다면, 아래의 문서화 페이지에서 도움을 얻거나, 미리 작성된 샘플 코드를 실행해 보세요.",
-    "second-desc": "두 번째 화면으로 넘어갔습니다! 여기에는 아무것도 없습니다!",
-    "app-version": "앱 버전: {0}"
+  "main-screen": {
+    "title": "메인 화면",
+    "greeting": "안녕하세요, Vutron! 모든 준비가 완료되었습니다.",
+    "description": "이제 크로스플랫폼 웹 애플리케이션을 개발할 수 있습니다. 변경사항을 실시간으로 확인하고, 단일 명령어로 여러 플랫폼에 빌드할 수 있습니다. 아직 익숙하지 않다면, 아래의 문서화 페이지에서 도움을 얻거나, 미리 작성된 샘플 코드를 실행해 보세요.",
+    "version": "앱 버전: {0}",
+    "menu": {
+      "change-theme": "테마 변경",
+      "change-language": "언어 변경",
+      "increment-count": "카운트 증가",
+      "documentation": "문서화",
+      "source-code": "소스 코드"
+    }
   },
-  "title": {
-    "main": "메인 화면",
-    "second": "두 번째 화면"
-  },
-  "menu": {
-    "change-theme": "테마 변경",
-    "change-language": "언어 변경",
-    "increment-count": "카운트 증가",
-    "documentation": "문서화",
-    "github": "소스 코드"
+  "second-screen": {
+    "title": "두 번째 화면",
+    "description": "두 번째 화면으로 넘어갔습니다! 여기에는 아무것도 없습니다!"
   }
 }

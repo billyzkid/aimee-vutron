@@ -26,11 +26,11 @@
     counter.incrementCount();
   }
 
-  function handleOpenDocument() {
+  function handleOpenDocumentation() {
     window.mainApi.openExternalUrl("https://vutron.jooy2.com");
   }
 
-  function handleOpenGitHub() {
+  function handleOpenSourceCode() {
     window.mainApi.openExternalUrl("https://github.com/jooy2/vutron");
   }
 </script>
@@ -42,15 +42,15 @@
         <img alt="logo" draggable="false" class="ma-auto h-auto w-75" src="/images/vutron-logo.webp" />
       </v-col>
       <v-col cols="12" md="7">
-        <h2 class="my-4">{{ $t("desc.welcome-title") }}</h2>
-        <p>{{ $t("desc.welcome-desc") }}</p>
-        <p class="my-4">{{ $t("desc.app-version", [appVersion]) }}</p>
+        <h2 class="my-4">{{ $t("main-screen.greeting") }}</h2>
+        <p>{{ $t("main-screen.description") }}</p>
+        <p class="my-4">{{ $t("main-screen.version", [appVersion]) }}</p>
         <v-row class="my-4">
           <v-col cols="3">
             <v-btn icon color="primary" @click="handleChangeTheme">
               <v-icon icon="mdi-brightness-6" />
               <v-tooltip activator="parent" location="bottom">
-                {{ $t("menu.change-theme") }}
+                {{ $t("main-screen.menu.change-theme") }}
               </v-tooltip>
             </v-btn>
           </v-col>
@@ -59,35 +59,35 @@
               <v-btn icon color="primary" @click="handleIncrementCount">
                 <v-icon icon="mdi-plus-circle" />
                 <v-tooltip activator="parent" location="bottom">
-                  {{ $t("menu.increment-count") }}
+                  {{ $t("main-screen.menu.increment-count") }}
                 </v-tooltip>
               </v-btn>
             </v-badge>
           </v-col>
           <v-col cols="3">
-            <v-btn icon color="primary" @click="handleOpenDocument">
+            <v-btn icon color="primary" @click="handleOpenDocumentation">
               <v-icon icon="mdi-file-document" />
               <v-tooltip activator="parent" location="bottom">
-                {{ $t("menu.documentation") }}
+                {{ $t("main-screen.menu.documentation") }}
               </v-tooltip>
             </v-btn>
           </v-col>
           <v-col cols="3">
-            <v-btn icon color="primary" @click="handleOpenGitHub">
+            <v-btn icon color="primary" @click="handleOpenSourceCode">
               <v-icon icon="mdi-github" />
               <v-tooltip activator="parent" location="bottom">
-                {{ $t("menu.github") }}
+                {{ $t("main-screen.menu.source-code") }}
               </v-tooltip>
             </v-btn>
           </v-col>
           <v-col cols="12">
             <v-select
               density="compact"
-              :label="$t('menu.change-language')"
+              :label="$t('main-screen.menu.change-language')"
               :model-value="language"
               :items="availableLanguages"
               @update:model-value="handleChangeLanguage">
-              {{ $t("menu.change-language") }}
+              {{ $t("main-screen.menu.change-language") }}
             </v-select>
           </v-col>
         </v-row>

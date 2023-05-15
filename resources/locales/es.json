@@ -1,19 +1,19 @@
 {
-  "desc": {
-    "welcome-title": "¡Hola, Vutron! Todo está listo.",
-    "welcome-desc": "Ahora puedes escribir aplicaciones web multiplataforma. Visualiza tus cambios en tiempo real y crea en múltiples plataformas con un solo comando. Si aún no estás familiarizado con ello, puedes obtener ayuda en la página de documentación a continuación o ejecutar un código de ejemplo preescrito.",
-    "second-desc": "¡Has cambiado a la segunda pantalla! ¡No hay nada aquí!",
-    "app-version": "Versión de la aplicación: {0}"
+  "main-screen": {
+    "title": "Pantalla principal",
+    "greeting": "¡Hola, Vutron! Todo está listo.",
+    "description": "Ahora puedes escribir aplicaciones web multiplataforma. Visualiza tus cambios en tiempo real y crea en múltiples plataformas con un solo comando. Si aún no estás familiarizado con ello, puedes obtener ayuda en la página de documentación a continuación o ejecutar un código de ejemplo preescrito.",
+    "version": "Versión de la aplicación: {0}",
+    "menu": {
+      "change-theme": "Cambiar tema",
+      "change-language": "Cambiar idioma",
+      "increment-count": "Incrementar la cuenta",
+      "documentation": "Documentación",
+      "source-code": "Código fuente"
+    }
   },
-  "title": {
-    "main": "Pantalla principal",
-    "second": "Segunda pantalla"
-  },
-  "menu": {
-    "change-theme": "Cambiar tema",
-    "change-language": "Cambiar idioma",
-    "increment-count": "Incrementar la cuenta",
-    "documentation": "Documentación",
-    "github": "Código fuente"
+  "second-screen": {
+    "title": "Segunda pantalla",
+    "description": "¡Has cambiado a la segunda pantalla! ¡No hay nada aquí!"
   }
 }

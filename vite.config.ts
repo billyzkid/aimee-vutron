@@ -16,7 +16,7 @@ export default defineConfig(async ({ command, mode }) => {
   process.env.VITE_APP_NAME = productName;
   process.env.VITE_APP_VERSION = version;
 
-  // Vite build options shared between processes
+  // Common build options
   const buildOptions: BuildOptions = {};
   buildOptions.target = "esnext";
   buildOptions.minify = mode === "production" ? "esbuild" : false;

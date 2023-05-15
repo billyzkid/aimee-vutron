@@ -1,5 +1,3 @@
-/// <reference types="../src/types" />
-
 import { vi, test, expect, beforeEach } from "vitest";
 import { contextBridge, ipcRenderer } from "electron";
 
@@ -33,7 +31,7 @@ test("Should expose main API", async () => {
   });
 });
 
-test("Should get locale", async () => {
+test("Should invoke get-locale", async () => {
   await import("../src/preload");
 
   const { invoke } = vi.mocked(ipcRenderer);
@@ -47,7 +45,7 @@ test("Should get locale", async () => {
   expect(returnValue).resolves.toBe("en-US");
 });
 
-test("Should open external URL", async () => {
+test("Should invoke open-external-url", async () => {
   await import("../src/preload");
 
   const { invoke } = vi.mocked(ipcRenderer);

@@ -8,6 +8,7 @@ export async function createMainWindow() {
     show: false,
     title: import.meta.env.VITE_APP_NAME,
     width: import.meta.env.DEV ? 1500 : 1200, // Accomodate the dev tools
+    minWidth: 350,
     height: 650,
     useContentSize: true,
     webPreferences: {

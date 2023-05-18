@@ -1,17 +1,22 @@
 <script setup lang="tsx">
   import { computed } from "vue";
-  import { useRouter, useRoute } from "vue-router";
+  import { useRoute, useRouter } from "vue-router";
 
-  const router = useRouter();
   const route = useRoute();
-  const titleKey = computed(() => (route.meta.titleKey || "main-screen.title") as string);
+  const router = useRouter();
+  const titleKey = computed(getTitleKey);
 
-  function handleRoute(path: string) {
-    router.push(path);
+  function getTitleKey() {
+    const routeName = (route.name ?? "main-screen") as string;
+    return `${routeName}.title`;
   }
 
-  function isCurrentRoute(path: string) {
-    return path === route.path;
+  function isCurrentRoute(name: string) {
+    return route.name === name;
+  }
+
+  function handleChangeRoute(name: string) {
+    router.push({ name });
   }
 </script>
 
@@ -22,15 +27,15 @@
       <v-btn
         prepend-icon="mdi-home-floor-1"
         variant="text"
-        :class="{ active: isCurrentRoute('/') }"
-        @click="handleRoute('/')">
+        :class="{ active: isCurrentRoute('main-screen') }"
+        @click="handleChangeRoute('main-screen')">
         {{ $t("main-screen.title") }}
       </v-btn>
       <v-btn
         prepend-icon="mdi-home-floor-2"
         variant="text"
-        :class="{ active: isCurrentRoute('/second') }"
-        @click="handleRoute('/second')">
+        :class="{ active: isCurrentRoute('second-screen') }"
+        @click="handleChangeRoute('second-screen')">
         {{ $t("second-screen.title") }}
       </v-btn>
     </template>

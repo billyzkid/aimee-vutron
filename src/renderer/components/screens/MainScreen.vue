@@ -1,21 +1,18 @@
 <script setup lang="tsx">
+  import { ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
   import { useCounter } from "../../store/counter";
   import { storeToRefs } from "pinia";
-  import { ref } from "vue";
 
-  const { locale, availableLocales } = useI18n();
+  const i18n = useI18n();
   const theme = useTheme();
   const counter = useCounter();
-
   const { count } = storeToRefs(counter);
-  const language = ref(locale);
-  const availableLanguages = ref(availableLocales);
-  const appVersion = ref(import.meta.env.VITE_APP_VERSION);
+  const version = ref(import.meta.env.VITE_APP_VERSION);
 
   function handleChangeLanguage(value: string) {
-    language.value = value;
+    i18n.locale.value = value;
   }
 
   function handleChangeTheme() {
@@ -44,7 +41,7 @@
       <v-col cols="12" md="7">
         <h2 class="my-4">{{ $t("main-screen.greeting") }}</h2>
         <p>{{ $t("main-screen.description") }}</p>
-        <p class="my-4">{{ $t("main-screen.version", [appVersion]) }}</p>
+        <p class="my-4">{{ $t("main-screen.version", [version]) }}</p>
         <v-row class="my-4">
           <v-col cols="3">
             <v-btn icon color="primary" @click="handleChangeTheme">
@@ -84,8 +81,8 @@
             <v-select
               density="compact"
               :label="$t('main-screen.menu.change-language')"
-              :model-value="language"
-              :items="availableLanguages"
+              :items="$i18n.availableLocales"
+              :model-value="$i18n.locale"
               @update:model-value="handleChangeLanguage">
               {{ $t("main-screen.menu.change-language") }}
             </v-select>

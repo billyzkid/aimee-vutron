@@ -1,67 +1,89 @@
-import { app } from "electron";
-import { createMainWindow, restoreOrCreateWindow } from "./windows";
-import "./ipc";
-import "./security";
+import { app, Menu } from "electron";
+import { openMainWindow } from "./windows";
 
-// Prevent multiple instances of the app
+import {
+  setContentSecurityPolicy,
+  setPermissionRequestHandler,
+  setWindowOpenHandler,
+  setWindowNavigationHandler,
+  setWebViewRequestHandler
+} from "./security";
+
+import "./ipc";
+
+// Exit if the app is already running
 if (!app.requestSingleInstanceLock()) {
-  app.quit();
   process.exit(0);
 }
 
-// Save system resources
+// Disable the default application menu
+// https://github.com/electron/electron/issues/35512
+Menu.setApplicationMenu(null);
+
+// TODO: Consider disabling hardware acceleration
+// https://github.com/electron/electron/issues/13368
 app.disableHardwareAcceleration();
 
-// Create the main window when the app
-// is ready to create browser windows
-app
-  .whenReady()
-  .then(createMainWindow)
-  .catch((x) => console.error("Failed to create window.", x));
-
-// Install the Vue DevTools extension in development
-// Note this requires the `electron-devtools-assembler` dev dependency
-// See https://devtools.vuejs.org/
-// if (import.meta.env.DEV) {
-//   app
-//     .whenReady()
-//     .then(async () => {
-//       const { default: installExtension, VUEJS_DEVTOOLS } = await import("electron-devtools-assembler");
-//       return await installExtension(VUEJS_DEVTOOLS);
-//     })
-//     .catch((x) => console.error("Failed to install the Vue DevTools extension.", x));
-// }
-
-// Check for app updates in production
-// Note this requires the `electron-updater` dependency
-// Note this may throw if the app is not yet published or configured for debugging
-// See https://www.electron.build/auto-update.html#quick-setup-guide
-// See https://www.electron.build/auto-update.html#debugging
 // if (import.meta.env.PROD) {
-//   app
-//     .whenReady()
-//     .then(async () => {
-//       const { autoUpdater } = await import("electron-updater");
-//       return await autoUpdater.checkForUpdatesAndNotify();
-//     })
-//     .catch((x) => console.error("Failed to check for app updates.", x));
+//   await tryInstallAppUpdates();
 // }
 
-// Ensure a window is open when the app is activated
-app.on("activate", () => {
-  restoreOrCreateWindow().catch((x) => console.error("Failed to restore or create window.", x));
+// if (import.meta.env.DEV) {
+//   await tryInstallDevtoolsExtension();
+// }
+
+// Open the main window when the app is ready
+app.once("ready", () => {
+  setContentSecurityPolicy();
+  setPermissionRequestHandler();
+  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
 });
 
-// Ensure a window is open when an attempt is made to
-// run a second instance of the app
+// Ensure the main window is opened and focused when the app is activated
+app.on("activate", () => {
+  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
+});
+
+// Ensure the main window is opened and focused when a second instance of the app is executed
 app.on("second-instance", () => {
-  restoreOrCreateWindow().catch((x) => console.error("Failed to restore or create window.", x));
+  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
+});
+
+// Enforce security for created web contents
+app.on("web-contents-created", (event, webContents) => {
+  setWindowOpenHandler(webContents);
+  setWindowNavigationHandler(webContents);
+  setWebViewRequestHandler(webContents);
 });
 
 // Quit the app if all windows are closed
-// Note macOS users typically quit the app explicitly using Command+Q
+// Note apps on MacOS are typically quit with Command+Q
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
+
+// Attempts to detect and install app updates
+// https://www.electron.build/auto-update.html#quick-setup-guide
+// https://github.com/iffy/electron-updater-example
+async function tryInstallAppUpdates() {
+  try {
+    const { autoUpdater } = await import("electron-updater");
+    return await autoUpdater.checkForUpdatesAndNotify();
+  } catch (x) {
+    console.error("Failed to install app updates.", x);
+  }
+}
+
+// Attempts to install the Vue Devtools extension
+// https://devtools.vuejs.org/
+// https://github.com/xupea/electron-devtools-installer#readme
+async function tryInstallDevtoolsExtension() {
+  try {
+    const { default: installExtension, VUEJS_DEVTOOLS } = await import("electron-devtools-assembler");
+    return await installExtension(VUEJS_DEVTOOLS);
+  } catch (x) {
+    console.error("Failed to install Vue Devtools extension.", x);
+  }
+}

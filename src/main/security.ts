@@ -1,68 +1,95 @@
-import { Session, app, shell } from "electron";
+import { WebContents, Session, session, shell } from "electron";
 import { URL } from "url";
 
-type Permission = Parameters<Exclude<Parameters<Session["setPermissionRequestHandler"]>[0], null>>[1];
+const whitelist = createWhitelist();
 
-const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<Permission>>(
-  import.meta.env.VITE_DEV_SERVER_URL !== undefined
-    ? [[new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set()]]
-    : []
-);
+// Creates a map of whitelisted origins and permissions
+function createWhitelist() {
+  type Permission = Parameters<Exclude<Parameters<Session["setPermissionRequestHandler"]>[0], null>>[1];
+  const map = new Map<string, Set<Permission>>();
 
-const ALLOWED_EXTERNAL_ORIGINS = new Set<`https://${string}`>(["https://github.com"]);
+  if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
+    map.set(new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set());
+  }
 
-app.on("web-contents-created", (event, contents) => {
-  contents.on("will-navigate", (event, url) => {
+  return map;
+}
+
+// Sets the Content-Security-Policy header
+// https://www.electronjs.org/docs/latest/tutorial/security#csp-http-headers
+export function setContentSecurityPolicy() {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": ["script-src 'self'"]
+      }
+    });
+  });
+}
+
+// Denies non-whitelisted permission requests
+// https://www.electronjs.org/docs/latest/tutorial/security#5-handle-session-permission-requests-from-remote-content
+export function setPermissionRequestHandler() {
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
+    const url = webContents.getURL();
     const { origin } = new URL(url);
 
-    if (!ALLOWED_ORIGINS_AND_PERMISSIONS.has(origin)) {
-      if (import.meta.env.DEV) {
-        console.warn(`Blocked navigation to disallowed origin "${origin}".`);
-      }
+    const permissionGranted = !!whitelist.get(origin)?.has(permission);
+    callback(permissionGranted);
 
-      event.preventDefault();
+    if (!permissionGranted && import.meta.env.DEV) {
+      console.warn("Denied permission request.", { url, origin, permission, details });
     }
   });
+}
 
-  contents.on("will-attach-webview", (event, webPreferences, params) => {
-    const { origin } = new URL(params.src);
+// Blocks non-whitelisted `window.open()` requests, et al.
+// https://www.electronjs.org/docs/latest/tutorial/security#14-disable-or-limit-creation-of-new-windows
+export function setWindowOpenHandler(webContents: WebContents) {
+  webContents.setWindowOpenHandler((details) => {
+    const { url } = details;
+    const { origin } = new URL(url);
 
-    if (!ALLOWED_ORIGINS_AND_PERMISSIONS.has(origin)) {
-      if (import.meta.env.DEV) {
-        console.warn(`Blocked WebView from attaching source "${params.src}" from disallowed origin "${origin}".`);
-      }
-
-      event.preventDefault();
-    } else {
-      delete webPreferences.preload;
-
-      webPreferences.nodeIntegration = false;
-      webPreferences.contextIsolation = true;
-    }
-  });
-
-  contents.setWindowOpenHandler((details) => {
-    const { origin } = new URL(details.url);
-
-    if (!ALLOWED_EXTERNAL_ORIGINS.has(origin as `https://${string}`)) {
-      if (import.meta.env.DEV) {
-        console.warn(`Blocked window from opening URL "${details.url}" from disallowed origin "${origin}".`);
-      }
-    } else {
-      shell.openExternal(details.url).catch(console.error);
+    if (whitelist.has(origin)) {
+      shell.openExternal(url);
+    } else if (import.meta.env.DEV) {
+      console.warn("Blocked window from being opened.", { url, origin, details });
     }
 
     return { action: "deny" };
   });
+}
 
-  contents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-    const { origin } = new URL(webContents.getURL());
+// Blocks non-whitelisted `window.location` requests, et al.
+// https://www.electronjs.org/docs/latest/tutorial/security#13-disable-or-limit-navigation
+export function setWindowNavigationHandler(webContents: WebContents) {
+  webContents.on("will-navigate", (event, url) => {
+    const { origin } = new URL(url);
 
-    const permissionGranted = !!ALLOWED_ORIGINS_AND_PERMISSIONS.get(origin)?.has(permission);
-    callback(permissionGranted);
+    if (!whitelist.has(origin)) {
+      event.preventDefault();
 
-    if (!permissionGranted && import.meta.env.DEV) {
-      console.warn(`Denied permission "${permission}" request from disallowed origin "${origin}".`);
+      if (import.meta.env.DEV) {
+        console.warn("Blocked navigation request.", { url, origin });
+      }
     }
   });
-});
+}
+
+// Blocks non-whitelisted webviews from being attached
+// https://www.electronjs.org/docs/latest/tutorial/security#12-verify-webview-options-before-creation
+export function setWebViewRequestHandler(webContents: WebContents) {
+  webContents.on("will-attach-webview", (event, webPreferences, params) => {
+    const { src: url } = params;
+    const { origin } = new URL(url);
+
+    if (!whitelist.has(origin)) {
+      event.preventDefault();
+
+      if (import.meta.env.DEV) {
+        console.warn("Blocked webview from being attached.", { url, origin, params });
+      }
+    }
+  });
+}

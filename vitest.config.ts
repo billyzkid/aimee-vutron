@@ -7,6 +7,7 @@ export default mergeConfig(
   defineConfig({
     test: {
       include: ["./tests/**/*.spec.ts"],
+      environment: "happy-dom",
       testTimeout: 10000
     },
     plugins: [vue()]

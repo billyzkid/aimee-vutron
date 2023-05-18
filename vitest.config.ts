@@ -6,7 +6,7 @@ import vuetify from "vite-plugin-vuetify";
 export default defineConfig({
   test: {
     environment: "happy-dom",
-    include: ["./tests/**/*.spec.ts"],
+    include: ["./tests/*.spec.ts"],
     testTimeout: 10000,
     deps: {
       inline: ["vuetify"]

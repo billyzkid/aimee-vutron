@@ -2,11 +2,10 @@ import { app, Menu } from "electron";
 import { openMainWindow } from "./windows";
 
 import {
-  setContentSecurityPolicy,
-  setPermissionRequestHandler,
   setWindowOpenHandler,
   setWindowNavigationHandler,
-  setWebViewRequestHandler
+  setWebViewRequestHandler,
+  setPermissionRequestHandler
 } from "./security";
 
 import "./ipc";
@@ -34,8 +33,6 @@ app.disableHardwareAcceleration();
 
 // Open the main window when the app is ready
 app.once("ready", () => {
-  setContentSecurityPolicy();
-  setPermissionRequestHandler();
   openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
 });
 
@@ -54,6 +51,7 @@ app.on("web-contents-created", (event, webContents) => {
   setWindowOpenHandler(webContents);
   setWindowNavigationHandler(webContents);
   setWebViewRequestHandler(webContents);
+  setPermissionRequestHandler(webContents);
 });
 
 // Quit the app if all windows are closed

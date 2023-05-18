@@ -1,4 +1,4 @@
-import { WebContents, Session, session, shell } from "electron";
+import { WebContents, Session, shell } from "electron";
 import { URL } from "url";
 
 const whitelist = createWhitelist();
@@ -13,35 +13,6 @@ function createWhitelist() {
   }
 
   return map;
-}
-
-// Sets the Content-Security-Policy header
-// https://www.electronjs.org/docs/latest/tutorial/security#csp-http-headers
-export function setContentSecurityPolicy() {
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        "Content-Security-Policy": ["script-src 'self'"]
-      }
-    });
-  });
-}
-
-// Denies non-whitelisted permission requests
-// https://www.electronjs.org/docs/latest/tutorial/security#5-handle-session-permission-requests-from-remote-content
-export function setPermissionRequestHandler() {
-  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
-    const url = webContents.getURL();
-    const { origin } = new URL(url);
-
-    const permissionGranted = !!whitelist.get(origin)?.has(permission);
-    callback(permissionGranted);
-
-    if (!permissionGranted && import.meta.env.DEV) {
-      console.warn("Denied permission request.", { url, origin, permission, details });
-    }
-  });
 }
 
 // Blocks non-whitelisted `window.open()` requests, et al.
@@ -90,6 +61,22 @@ export function setWebViewRequestHandler(webContents: WebContents) {
       if (import.meta.env.DEV) {
         console.warn("Blocked webview from being attached.", { url, origin, params });
       }
+    }
+  });
+}
+
+// Denies non-whitelisted permission requests
+// https://www.electronjs.org/docs/latest/tutorial/security#5-handle-session-permission-requests-from-remote-content
+export function setPermissionRequestHandler(webContents: WebContents) {
+  webContents.session.setPermissionRequestHandler((webContents, permission, callback, details) => {
+    const url = webContents.getURL();
+    const { origin } = new URL(url);
+
+    const permissionGranted = !!whitelist.get(origin)?.has(permission);
+    callback(permissionGranted);
+
+    if (!permissionGranted && import.meta.env.DEV) {
+      console.warn("Denied permission request.", { url, origin, permission, details });
     }
   });
 }

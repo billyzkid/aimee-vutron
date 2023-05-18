@@ -1,19 +1,11 @@
 <script setup lang="tsx">
   import { ref } from "vue";
-  import { useI18n } from "vue-i18n";
   import { useTheme } from "vuetify";
   import { useCounter } from "../../store/counter";
-  import { storeToRefs } from "pinia";
 
-  const i18n = useI18n();
   const theme = useTheme();
   const counter = useCounter();
-  const { count } = storeToRefs(counter);
   const version = ref(import.meta.env.VITE_APP_VERSION);
-
-  function handleChangeLanguage(value: string) {
-    i18n.locale.value = value;
-  }
 
   function handleChangeTheme() {
     theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
@@ -52,7 +44,7 @@
             </v-btn>
           </v-col>
           <v-col cols="3">
-            <v-badge color="blue" :content="count">
+            <v-badge color="blue" :content="counter.count">
               <v-btn icon color="primary" @click="handleIncrementCount">
                 <v-icon icon="mdi-plus-circle" />
                 <v-tooltip activator="parent" location="bottom">
@@ -79,11 +71,10 @@
           </v-col>
           <v-col cols="12">
             <v-select
-              density="compact"
-              :label="$t('main-screen.menu.change-language')"
+              v-model="$i18n.locale"
               :items="$i18n.availableLocales"
-              :model-value="$i18n.locale"
-              @update:model-value="handleChangeLanguage">
+              :label="$t('main-screen.menu.change-language')"
+              density="compact">
               {{ $t("main-screen.menu.change-language") }}
             </v-select>
           </v-col>

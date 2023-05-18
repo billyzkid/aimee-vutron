@@ -47,10 +47,21 @@ const router = createRouter({
 
 const i18n = createI18n({
   legacy: false,
-  locale: await window.mainApi.getLocale(),
   fallbackLocale: "en",
   messages
 });
+
+const locale = await window.mainApi.getLocale();
+const shortLocale = locale.split("-")[0];
+
+// Initialize the locale
+if (i18n.global.availableLocales.includes(locale)) {
+  i18n.global.locale.value = locale;
+} else if (i18n.global.availableLocales.includes(shortLocale)) {
+  i18n.global.locale.value = shortLocale;
+} else {
+  i18n.global.locale.value = String(i18n.global.fallbackLocale.value);
+}
 
 const vuetify = createVuetify({
   locale: {

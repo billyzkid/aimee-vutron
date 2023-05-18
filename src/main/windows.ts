@@ -24,7 +24,7 @@ async function createMainWindow() {
     title: import.meta.env.VITE_APP_NAME,
     width: import.meta.env.DEV ? 1500 : 1200, // Accomodate the dev tools
     height: 650,
-    minWidth: 350,
+    minWidth: 385,
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js")

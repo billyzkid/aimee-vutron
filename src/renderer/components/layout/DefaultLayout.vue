@@ -5,7 +5,7 @@
 <template>
   <v-app>
     <v-layout>
-      <HeaderLayout />
+      <header-layout />
       <v-main>
         <slot />
       </v-main>

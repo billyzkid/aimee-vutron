@@ -1,13 +1,6 @@
 import { app, Menu } from "electron";
 import { openMainWindow } from "./windows";
-
-import {
-  setWindowOpenHandler,
-  setWindowNavigationHandler,
-  setWebViewRequestHandler,
-  setPermissionRequestHandler
-} from "./security";
-
+import { secureWebContents } from "./security";
 import "./ipc";
 
 // Exit if the app is already running
@@ -36,26 +29,23 @@ app.once("ready", () => {
   openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
 });
 
-// Ensure the main window is opened and focused when the app is activated
+// Ensure the main window is opened when the app is activated
 app.on("activate", () => {
   openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
 });
 
-// Ensure the main window is opened and focused when a second instance of the app is executed
+// Ensure the main window is opened when a second instance of the app is executed
 app.on("second-instance", () => {
   openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
 });
 
 // Enforce security for created web contents
 app.on("web-contents-created", (event, webContents) => {
-  setWindowOpenHandler(webContents);
-  setWindowNavigationHandler(webContents);
-  setWebViewRequestHandler(webContents);
-  setPermissionRequestHandler(webContents);
+  secureWebContents(webContents);
 });
 
-// Quit the app if all windows are closed
-// Note apps on MacOS are typically quit with Command+Q
+// Quit the app when all windows are closed
+// Note MacOS apps are quit explicitly with Command+Q
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

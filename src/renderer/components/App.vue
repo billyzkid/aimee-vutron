@@ -3,9 +3,9 @@
 </script>
 
 <template>
-  <DefaultLayout>
+  <default-layout>
     <router-view />
-  </DefaultLayout>
+  </default-layout>
 </template>
 
 <style>

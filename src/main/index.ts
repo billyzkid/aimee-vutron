@@ -1,42 +1,40 @@
-import { app, Menu } from "electron";
+import { app } from "electron";
 import { openMainWindow } from "./windows";
 import { secureWebContents } from "./security";
 import "./ipc";
 
-// Exit if the app is already running
+// Terminate the process if an instance of the app is already running
 if (!app.requestSingleInstanceLock()) {
   process.exit(0);
 }
 
-// Disable the default application menu
-// https://github.com/electron/electron/issues/35512
-Menu.setApplicationMenu(null);
+// Attempt to detect and install app updates in production
+if (import.meta.env.PROD) {
+  tryInstallAppUpdates();
+}
 
 // TODO: Consider disabling hardware acceleration
 // https://github.com/electron/electron/issues/13368
-app.disableHardwareAcceleration();
+// app.disableHardwareAcceleration();
 
-// if (import.meta.env.PROD) {
-//   await tryInstallAppUpdates();
-// }
-
-// if (import.meta.env.DEV) {
-//   await tryInstallDevtoolsExtension();
-// }
-
-// Open the main window when the app is ready
+// Attempt to install the Vue Devtools extension in development
+// and open the main window when the app is ready
 app.once("ready", () => {
-  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
+  if (import.meta.env.DEV) {
+    tryInstallVueDevtoolsExtension().then(tryOpenMainWindow);
+  } else {
+    tryOpenMainWindow();
+  }
 });
 
 // Ensure the main window is opened when the app is activated
 app.on("activate", () => {
-  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
+  tryOpenMainWindow();
 });
 
 // Ensure the main window is opened when a second instance of the app is executed
 app.on("second-instance", () => {
-  openMainWindow().catch((x) => console.error("Failed to open the main window.", x));
+  tryOpenMainWindow();
 });
 
 // Enforce security for created web contents
@@ -58,7 +56,7 @@ app.on("window-all-closed", () => {
 async function tryInstallAppUpdates() {
   try {
     const { autoUpdater } = await import("electron-updater");
-    return await autoUpdater.checkForUpdatesAndNotify();
+    await autoUpdater.checkForUpdatesAndNotify();
   } catch (x) {
     console.error("Failed to install app updates.", x);
   }
@@ -67,11 +65,20 @@ async function tryInstallAppUpdates() {
 // Attempts to install the Vue Devtools extension
 // https://devtools.vuejs.org/
 // https://github.com/xupea/electron-devtools-installer#readme
-async function tryInstallDevtoolsExtension() {
+async function tryInstallVueDevtoolsExtension() {
   try {
     const { default: installExtension, VUEJS_DEVTOOLS } = await import("electron-devtools-assembler");
-    return await installExtension(VUEJS_DEVTOOLS);
+    await installExtension(VUEJS_DEVTOOLS);
   } catch (x) {
     console.error("Failed to install Vue Devtools extension.", x);
+  }
+}
+
+// Attempts to open the main app window
+async function tryOpenMainWindow() {
+  try {
+    await openMainWindow();
+  } catch (x) {
+    console.error("Failed to open main window.", x);
   }
 }

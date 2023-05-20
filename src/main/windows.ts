@@ -1,5 +1,9 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, Menu } from "electron";
 import * as path from "path";
+
+// Suppress the default menu for each window
+// https://github.com/electron/electron/issues/35512
+Menu.setApplicationMenu(null);
 
 // Ensure the main application window is visible and focused
 export async function openMainWindow() {

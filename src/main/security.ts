@@ -1,11 +1,19 @@
 import { WebContents, Session, shell } from "electron";
 import { URL } from "url";
 
-// Available permissions
-type Permission = Parameters<Exclude<Parameters<Session["setPermissionRequestHandler"]>[0], null>>[1];
+const whitelist = createWhitelist();
 
-// TODO: Add whitelisted origins and permissions
-const whitelist = new Map<string, Set<Permission>>();
+// Creates a map of whitelisted origins and permissions
+function createWhitelist() {
+  type Permission = Parameters<Exclude<Parameters<Session["setPermissionRequestHandler"]>[0], null>>[1];
+  const map = new Map<string, Set<Permission>>();
+
+  if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
+    map.set(new URL(import.meta.env.VITE_DEV_SERVER_URL).origin, new Set());
+  }
+
+  return map;
+}
 
 // Blocks non-whitelisted `window.open()` requests, et al.
 // https://www.electronjs.org/docs/latest/tutorial/security#14-disable-or-limit-creation-of-new-windows

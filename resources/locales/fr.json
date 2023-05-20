@@ -3,7 +3,7 @@
     "title": "Écran principal",
     "greeting": "Bonjour, Vutron ! Tout est prêt.",
     "description": "Vous pouvez maintenant écrire des applications Web multiplateformes. Visualisez vos modifications en temps réel et créez sur plusieurs plateformes avec une seule commande. Si vous ne le connaissez pas encore, vous pouvez obtenir de l'aide sur la page de documentation ci-dessous ou exécuter un exemple de code pré-écrit.",
-    "version": "Version de l'application : {0}",
+    "app-version": "Version de l'application : {0}",
     "menu": {
       "change-theme": "Changer le thème",
       "change-language": "Changer la langue",
@@ -15,5 +15,8 @@
   "second-screen": {
     "title": "Deuxième écran",
     "description": "Vous avez déplacé vers le deuxième écran ! Il n'y a rien ici !"
+  },
+  "$vuetify": {
+    "badge": "Badge"
   }
 }

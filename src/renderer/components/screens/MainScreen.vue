@@ -24,7 +24,7 @@
       <v-col cols="12" md="7">
         <h2 class="my-4">{{ $t("main-screen.greeting") }}</h2>
         <p class="my-4">{{ $t("main-screen.description") }}</p>
-        <p class="my-4">{{ $t("main-screen.version", [appVersion]) }}</p>
+        <p class="my-4">{{ $t("main-screen.app-version", [appVersion]) }}</p>
         <v-row class="my-4">
           <v-col>
             <v-btn icon color="primary" @click="settingsStore.toggleTheme">

@@ -3,7 +3,7 @@
     "title": "主屏幕",
     "greeting": "你好，Vutron！一切都准备好了。",
     "description": "您现在可以编写跨平台的 Web 应用程序。实时查看更改并用一个命令在多个平台上构建。如果您还不熟悉它，您可以在下面的文档页面获取帮助，或运行一些预先编写的示例代码。",
-    "version": "应用版本：{0}",
+    "app-version": "应用版本：{0}",
     "menu": {
       "change-theme": "切换主题",
       "change-language": "切换语言",
@@ -15,5 +15,8 @@
   "second-screen": {
     "title": "第二屏幕",
     "description": "已移至第二屏！这里什么都没有！"
+  },
+  "$vuetify": {
+    "badge": "徽章"
   }
 }

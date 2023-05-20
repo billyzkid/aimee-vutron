@@ -3,7 +3,7 @@
     "title": "Tela Principal",
     "greeting": "Olá, Vutron! Tudo está pronto.",
     "description": "Agora você pode escrever aplicações Web multiplataforma. Veja as suas alterações em tempo real e crie em várias plataformas com um único comando. Se ainda não estiver familiarizado com isso, você pode obter ajuda na página de documentação abaixo, ou executar um código de exemplo pré-escrito.",
-    "version": "Versão do aplicativo: {0}",
+    "app-version": "Versão do aplicativo: {0}",
     "menu": {
       "change-theme": "Mudar Tema",
       "change-language": "Mudar Idioma",
@@ -15,5 +15,8 @@
   "second-screen": {
     "title": "Segunda Tela",
     "description": "Você mudou para a segunda tela! Não há nada aqui!"
+  },
+  "$vuetify": {
+    "badge": "Distintivo"
   }
 }

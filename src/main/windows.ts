@@ -30,10 +30,6 @@ async function createMainWindow() {
     }
   });
 
-  // Hide the menu bar
-  // Note `mainWindow.removeMenu()` additionally disables the menu shortcuts
-  //window.setMenuBarVisibility(false);
-
   // Show the window when it's ready
   // Note this prevents a flicker before the window has loaded content
   window.on("ready-to-show", () => {

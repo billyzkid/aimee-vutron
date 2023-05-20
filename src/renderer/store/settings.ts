@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-// import { useTheme } from "vuetify";
-// import { useI18n } from "vue-i18n";
+import i18n from "../plugins/i18n";
+import vuetify from "../plugins/vuetify";
 
 export const useSettingsStore = defineStore("settings", {
   state: () => ({
@@ -13,12 +13,10 @@ export const useSettingsStore = defineStore("settings", {
   },
   actions: {
     toggleTheme() {
-      //const theme = useTheme();
-      //theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
+      this.theme = vuetify.theme.global.name.value = vuetify.theme.current.value.dark ? "light" : "dark";
     },
-    changeLanguage() {
-      //const i18n = useI18n();
-      //i18n.locale.value = language;
+    changeLanguage(locale: string) {
+      this.language = i18n.global.locale.value = locale;
     }
   },
   persist: true

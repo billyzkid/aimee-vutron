@@ -1,4 +1,4 @@
-import { vi, test, expect, beforeEach } from "vitest";
+import { vi, test, expect, afterEach } from "vitest";
 import { contextBridge, ipcRenderer } from "electron";
 
 vi.mock("electron", () => ({
@@ -10,8 +10,8 @@ vi.mock("electron", () => ({
   }
 }));
 
-beforeEach(() => {
-  vi.resetAllMocks();
+afterEach(() => {
+  vi.clearAllMocks();
   vi.resetModules();
 });
 

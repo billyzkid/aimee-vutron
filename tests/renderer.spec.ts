@@ -1,4 +1,4 @@
-import { vi, test, expect, beforeEach, afterEach } from "vitest";
+import { vi, test, expect, afterEach } from "vitest";
 import { config, mount } from "@vue/test-utils";
 import { i18n, pinia, router, vuetify } from "../src/renderer/plugins";
 import { VApp } from "vuetify/components";
@@ -15,13 +15,13 @@ function fail(message: string) {
   throw new Error(message);
 }
 
-beforeEach(() => {
-  console.warn = vi.fn(fail);
-  console.error = vi.fn(fail);
-});
+vi.mock("console", () => ({
+  warn: vi.fn(fail),
+  error: vi.fn(fail)
+}));
 
 afterEach(() => {
-  vi.resetAllMocks();
+  vi.clearAllMocks();
 });
 
 test("App component", () => {

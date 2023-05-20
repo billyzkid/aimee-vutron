@@ -18,7 +18,4 @@ app.use(pinia);
 app.use(router);
 app.use(vuetify);
 
-// https://github.com/vuejs/vue-router/issues/3518
-await router.isReady();
-
 app.mount("#app");

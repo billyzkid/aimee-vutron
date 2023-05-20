@@ -3,7 +3,7 @@
   import { useRoute } from "vue-router";
 
   const route = useRoute();
-  const routeTitleKey = computed(() => `${String(route.name)}.title`);
+  const routeTitleKey = computed(() => `${String(route.name ?? "main-screen")}.title`);
 </script>
 
 <template>

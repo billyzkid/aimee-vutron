@@ -67,7 +67,7 @@
               density="compact"
               :label="$t('main-screen.menu.change-language')"
               :items="$i18n.availableLocales"
-              :model-value="settingsStore.language"
+              :model-value="settingsStore.locale"
               @update:model-value="settingsStore.changeLanguage" />
           </v-col>
         </v-row>

@@ -19,8 +19,7 @@ app.use(pinia);
 app.use(router);
 app.use(vuetify);
 
-const { theme, language } = useSettingsStore();
-vuetify.theme.global.name.value = theme;
-i18n.global.locale.value = language;
+const settingsStore = useSettingsStore();
+settingsStore.initialize();
 
 app.mount("#app");

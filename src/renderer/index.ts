@@ -19,7 +19,11 @@ app.use(pinia);
 app.use(router);
 app.use(vuetify);
 
+// Initialize the persisted theme and language settings
 const settingsStore = useSettingsStore();
 settingsStore.initialize();
+
+// Wait for the router to complete initial navigation
+await router.isReady();
 
 app.mount("#app");

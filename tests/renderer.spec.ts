@@ -1,7 +1,7 @@
 import { vi, test, expect, afterEach } from "vitest";
 import { config, mount } from "@vue/test-utils";
 import { i18n, pinia, router, vuetify } from "../src/renderer/plugins";
-import { VApp } from "vuetify/components";
+import { VApp } from "vuetify/components/VApp";
 
 import App from "../src/renderer/components/App.vue";
 import MainScreen from "../src/renderer/components/screens/MainScreen.vue";

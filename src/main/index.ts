@@ -10,7 +10,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 // Check for app updates in production
-if (import.meta.env.DEV) {
+if (import.meta.env.PROD) {
   checkForUpdates();
 }
 

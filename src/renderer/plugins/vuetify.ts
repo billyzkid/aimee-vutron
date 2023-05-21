@@ -1,4 +1,4 @@
-import { i18n } from ".";
+import i18n from "./i18n";
 import { useI18n } from "vue-i18n";
 import { createVuetify } from "vuetify";
 import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n";

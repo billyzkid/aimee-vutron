@@ -13,7 +13,7 @@ export default defineConfig(async ({ command, mode }) => {
   const { builtinModules } = await import("module");
 
   // Environment variables
-  process.env.ELECTRON_NO_ATTACH_CONSOLE = "";
+  //process.env.ELECTRON_NO_ATTACH_CONSOLE = "";
   process.env.VITE_APP_NAME = productName;
   process.env.VITE_APP_VERSION = version;
 

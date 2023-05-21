@@ -1,6 +1,7 @@
 import { app } from "electron";
 import { openMainWindow } from "./windows";
 import { secureWebContents } from "./security";
+import { checkForUpdates } from "./updater";
 import "./ipc";
 
 // Terminate the process if an instance of the app is already running
@@ -8,9 +9,9 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0);
 }
 
-// Attempt to detect and install app updates in production
-if (import.meta.env.PROD) {
-  tryInstallAppUpdates();
+// Check for app updates in production
+if (import.meta.env.DEV) {
+  checkForUpdates();
 }
 
 // TODO: Consider disabling hardware acceleration
@@ -49,18 +50,6 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-
-// Attempts to detect and install app updates
-// https://www.electron.build/auto-update.html#quick-setup-guide
-// https://github.com/iffy/electron-updater-example
-async function tryInstallAppUpdates() {
-  try {
-    const { autoUpdater } = await import("electron-updater");
-    await autoUpdater.checkForUpdatesAndNotify();
-  } catch (x) {
-    console.error("Failed to install app updates.", x);
-  }
-}
 
 // Attempts to install the Vue Devtools extension
 // https://devtools.vuejs.org/

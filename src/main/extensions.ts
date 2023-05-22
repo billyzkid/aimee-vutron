@@ -20,7 +20,7 @@ export async function installExtension(extensionId: string, options: InstallExte
   let extension = session.defaultSession.getExtension(extensionId);
 
   if (extension && force) {
-    session.defaultSession.removeExtension(extension.id);
+    session.defaultSession.removeExtension(extensionId);
   }
 
   if (!extension || force) {
@@ -33,15 +33,9 @@ export async function installExtension(extensionId: string, options: InstallExte
 
 // Downloads a Chrome extension for the app
 async function downloadExtension(extensionId: string) {
-  const extensionsPath = path.join(app.getPath("userData"), "Extensions");
-  const extensionPath = path.join(extensionsPath, extensionId);
-
-  // Ensure the extensions path exists
-  await fs.promises.mkdir(extensionsPath, { recursive: true });
-  await fs.promises.rm(extensionPath, { recursive: true, force: true });
-
   const extensionCrxUrl = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc&prodversion=${process.versions.chrome}`;
-  const extensionCrxFile = `${extensionPath}.crx`;
+  const extensionCrxFile = path.join(app.getPath("temp"), extensionId);
+  const extensionPath = path.join(app.getPath("userData"), "Extensions", extensionId);
 
   // Download and unzip the extension file
   await downloadFile(extensionCrxUrl, extensionCrxFile);

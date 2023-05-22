@@ -1,8 +1,12 @@
 import { vi, test, expect, afterEach, MockedClass } from "vitest";
-import { BrowserWindow, Menu } from "electron";
+import { Menu, BrowserWindow } from "electron";
 import { createMainWindow, openMainWindow } from "../src/main/windows";
 
 vi.mock("electron", () => {
+  // Mock the Menu class
+  const MockedMenu = vi.fn() as unknown as MockedClass<typeof Menu>;
+  MockedMenu.setApplicationMenu = vi.fn();
+
   // Mock the BrowserWindow class
   const MockedBrowserWindow = vi.fn() as unknown as MockedClass<typeof BrowserWindow>;
   MockedBrowserWindow.getAllWindows = vi.fn(() => MockedBrowserWindow.mock.instances);
@@ -15,13 +19,15 @@ vi.mock("electron", () => {
   MockedBrowserWindow.prototype.restore = vi.fn();
   MockedBrowserWindow.prototype.focus = vi.fn();
 
-  // Mock the Menu class
-  const MockedMenu = vi.fn() as unknown as MockedClass<typeof Menu>;
-  MockedMenu.setApplicationMenu = vi.fn();
+  // Mock the WebContents class
+  const MockedWebContents = vi.fn() as unknown as MockedClass<typeof Electron.WebContents>;
+  MockedWebContents.prototype.openDevTools = vi.fn();
+
+  Object.defineProperty(MockedBrowserWindow.prototype, "webContents", { value: new MockedWebContents() });
 
   return {
-    BrowserWindow: MockedBrowserWindow,
-    Menu: MockedMenu
+    Menu: MockedMenu,
+    BrowserWindow: MockedBrowserWindow
   };
 });
 
@@ -36,7 +42,7 @@ test("Should suppress the default application menu", async () => {
   expect(setApplicationMenu).toHaveBeenCalledWith(null);
 });
 
-test("Should create and load a new window", async () => {
+test("Should create and initialize a new window", async () => {
   const { mock } = vi.mocked(BrowserWindow);
   expect(mock.instances).toHaveLength(0);
 
@@ -44,14 +50,24 @@ test("Should create and load a new window", async () => {
   await createMainWindow();
   expect(mock.instances).toHaveLength(1);
 
-  // Ensure the content is loaded
   const window = vi.mocked(mock.instances[0]);
-  expect(window.loadURL.mock.calls.length + window.loadFile.mock.calls.length).toBe(1);
 
-  if (window.loadURL.mock.calls.length === 1) {
-    expect(window.loadURL).toHaveBeenCalledWith(expect.stringMatching(/index\.html$/));
+  // Ensure the devtools were opened in development only
+  if (import.meta.env.DEV) {
+    expect(window.webContents.openDevTools).toHaveBeenCalledOnce();
   } else {
+    expect(window.webContents.openDevTools).not.toHaveBeenCalled();
+  }
+
+  // Ensure the content was loaded properly
+  if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
+    expect(window.loadURL).toHaveBeenCalledOnce();
+    expect(window.loadURL).toHaveBeenCalledWith(import.meta.env.VITE_DEV_SERVER_URL);
+    expect(window.loadFile).not.toHaveBeenCalled();
+  } else {
+    expect(window.loadFile).toHaveBeenCalledOnce();
     expect(window.loadFile).toHaveBeenCalledWith(expect.stringMatching(/index\.html$/));
+    expect(window.loadURL).not.toHaveBeenCalled();
   }
 });
 
@@ -88,7 +104,7 @@ test("Should restore a minimized window", async () => {
   await openMainWindow();
   expect(mock.instances).toHaveLength(1);
 
-  // Ensure the window is restored
+  // Ensure the window was restored
   expect(window.restore).toHaveBeenCalledOnce();
   expect(window.focus).not.toHaveBeenCalled();
 });
@@ -109,7 +125,7 @@ test("Should give focus to an open window", async () => {
   await openMainWindow();
   expect(mock.instances).toHaveLength(1);
 
-  // Ensure the window is focused
-  expect(window.restore).not.toHaveBeenCalled();
+  // Ensure the window was focused
   expect(window.focus).toHaveBeenCalledOnce();
+  expect(window.restore).not.toHaveBeenCalled();
 });

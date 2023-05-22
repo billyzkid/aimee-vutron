@@ -20,11 +20,11 @@ if (import.meta.env.PROD) {
   checkForUpdates().catch((error) => console.error("Failed to check for updates.", error));
 }
 
-// Installs the Vue Devtools Extension (https://devtools.vuejs.org)
-// and creates the main application window when the app is ready
+// Creates the main application window when the app is ready
 app.once("ready", async () => {
   if (import.meta.env.DEV) {
     try {
+      // Install the Vue Devtools Extension in development
       await installExtension(VUE_DEVTOOLS_EXTENSION_ID);
     } catch (error) {
       console.error("Failed to install the Vue Devtools Extension.", error);

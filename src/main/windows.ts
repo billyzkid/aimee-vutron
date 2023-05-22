@@ -1,17 +1,16 @@
-import { BrowserWindow, Menu } from "electron";
+import { Menu, BrowserWindow } from "electron";
 import * as path from "path";
 
-// Suppress the default menu for each window
+// Suppress the default application menu
 // https://github.com/electron/electron/issues/35512
 Menu.setApplicationMenu(null);
 
-// Creates and loads the main application window
+// Creates and initializes the main application window
 export async function createMainWindow() {
-  // Create the window
   const window = new BrowserWindow({
     show: false,
     title: import.meta.env.VITE_APP_NAME,
-    width: import.meta.env.DEV ? 1500 : 1200, // Accomodate the dev tools
+    width: import.meta.env.DEV ? 1500 : 1200, // Accomodate the devtools
     height: 650,
     useContentSize: true,
     webPreferences: {
@@ -20,16 +19,14 @@ export async function createMainWindow() {
   });
 
   // Show the window when it's ready
-  // Note this prevents a flicker before the window has loaded content
   window.on("ready-to-show", () => {
-    // Show and give focus to the window
     window.show();
-
-    // Open the devtools in development
-    if (import.meta.env.DEV) {
-      window.webContents.openDevTools();
-    }
   });
+
+  // Open the devtools in development
+  if (import.meta.env.DEV) {
+    window.webContents.openDevTools();
+  }
 
   // Load the window content
   if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {

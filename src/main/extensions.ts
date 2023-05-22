@@ -3,13 +3,20 @@ import * as fs from "fs";
 import * as path from "path";
 import unzip from "unzip-crx-3";
 
+interface InstallExtensionOptions {
+  force?: boolean;
+  loadOptions?: LoadExtensionOptions;
+}
+
 // ID used to install the Vue Devtools Extension
 // https://devtools.vuejs.org
 export const VUE_DEVTOOLS_EXTENSION_ID = "nhdogjmejiglipccpnnnanhbledajbpd";
 
 // Installs a Chrome extension for the app
 // Note this cannot be called before the app ready event
-export async function installExtension(extensionId: string, force?: false, options?: LoadExtensionOptions) {
+export async function installExtension(extensionId: string, options: InstallExtensionOptions = {}) {
+  const { force, loadOptions } = options;
+
   let extension = session.defaultSession.getExtension(extensionId);
 
   if (extension && force) {
@@ -18,47 +25,48 @@ export async function installExtension(extensionId: string, force?: false, optio
 
   if (!extension || force) {
     const extensionPath = await downloadExtension(extensionId);
-    extension = await session.defaultSession.loadExtension(extensionPath, options);
+    extension = await session.defaultSession.loadExtension(extensionPath, loadOptions);
   }
 
   return extension;
 }
 
+// Downloads a Chrome extension for the app
 async function downloadExtension(extensionId: string) {
-  const userDataPath = app.getPath("userData");
-  const extensionsPath = path.join(userDataPath, "Extensions");
-
-  // Ensure the extensions folder exists
-  await fs.promises.mkdir(extensionsPath, { recursive: true });
-
-  // Ensure the existing extension is removed
+  const extensionsPath = path.join(app.getPath("userData"), "Extensions");
   const extensionPath = path.join(extensionsPath, extensionId);
+
+  // Ensure the extensions path exists
+  await fs.promises.mkdir(extensionsPath, { recursive: true });
   await fs.promises.rm(extensionPath, { recursive: true, force: true });
 
-  const chromeVersion = process.versions.chrome || 32;
-  const extensionUrl = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc&prodversion=${chromeVersion}`;
-  const extensionFile = `${extensionPath}.crx`;
+  const extensionCrxUrl = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc&prodversion=${process.versions.chrome}`;
+  const extensionCrxFile = `${extensionPath}.crx`;
 
   // Download and unzip the extension file
-  await downloadFile(extensionUrl, extensionFile);
-  await unzip(extensionFile, extensionPath);
+  await downloadFile(extensionCrxUrl, extensionCrxFile);
+  await unzip(extensionCrxFile, extensionPath);
 
   return extensionPath;
 }
 
-function downloadFile(url: string, dest: string) {
+// Downloads a URL to the specified destination file
+function downloadFile(url: string, file: string) {
   return new Promise((resolve, reject) => {
     const request = net.request(url);
 
-    // Write the response to the destination file
+    // Reject the promise if the request fails
+    request.on("error", reject);
+
+    // Attempt to write the response to the destination file
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     request.on("response", (response: any) => {
-      response.pipe(fs.createWriteStream(dest));
       response.on("error", reject);
       response.on("close", resolve);
+      response.pipe(fs.createWriteStream(file));
     });
 
-    request.on("error", reject);
+    // Send the request
     request.end();
   });
 }

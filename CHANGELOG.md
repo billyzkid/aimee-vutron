@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added [Cubism Web Samples](https://github.com/Live2D/CubismWebSamples) submodule
 
 ### Changed
+
 - Ported source code to [TypeScript](https://www.typescriptlang.org/)
 - Moved source files to `src` folder
 - Moved build output files to `out` folder

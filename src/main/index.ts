@@ -1,58 +1,89 @@
 import { app } from "electron";
-import { checkForUpdates } from "./updater";
-import { installExtension, VUE_DEVTOOLS_EXTENSION_ID } from "./extensions";
-import { createMainWindow, openMainWindow } from "./windows";
-import { secureWebContents } from "./security";
+import { suppressDefaultMenu, registerGlobalShortcuts } from "./menus";
+import { createMainWindow, openDefaultWindow, openDevTools } from "./windows";
+import { setDefaultHandlers } from "./security";
+import loadExtension from "./extensions";
+import checkForUpdate from "./updates";
+import * as constants from "./constants";
 import "./ipc";
 
-// Terminate the process if another instance of the app is already running
+// Exit the app if another instance is already running
 if (!app.requestSingleInstanceLock()) {
-  console.debug("Failed to obtain single instance lock.");
-  process.exit(0);
+  console.log("Exiting application due to denied request for single instance lock.");
+  app.exit();
 }
 
-// TODO: Consider disabling hardware acceleration
+// Disable hardware acceleration
 // https://github.com/electron/electron/issues/13368
-// app.disableHardwareAcceleration();
+app.disableHardwareAcceleration();
 
-// Check for app updates in production
-if (import.meta.env.PROD) {
-  checkForUpdates().catch((error) => console.error("Failed to check for updates.", error));
+// Suppress the default application menu
+// https://github.com/electron/electron/issues/35512
+//replaceDefaultMenu();
+suppressDefaultMenu();
+
+// Initialize the app when Electron is initialized
+// This registers global shortcuts and creates the main application window
+// In development, this additionally loads an extension first and opens the devtools last
+// In production, this additionally checks for an app update first
+if (import.meta.env.DEV) {
+  app
+    .whenReady()
+    .then(tryLoadVueDevtoolsExtension)
+    .then(registerGlobalShortcuts)
+    .then(createMainWindow)
+    .then(openDevTools)
+    .catch((reason) => console.error(`Failed to initialize application.`, { reason, mode: import.meta.env.MODE }));
+} else {
+  Promise.all([app.whenReady(), tryCheckForUpdate()])
+    .then(registerGlobalShortcuts)
+    .then(createMainWindow)
+    .catch((reason) => console.error(`Failed to initialize application.`, { reason, mode: import.meta.env.MODE }));
 }
 
-// Creates the main application window when the app is ready
-app.once("ready", async () => {
-  if (import.meta.env.DEV) {
-    try {
-      // Install the Vue Devtools Extension in development
-      await installExtension(VUE_DEVTOOLS_EXTENSION_ID);
-    } catch (error) {
-      console.error("Failed to install the Vue Devtools Extension.", error);
-    }
-  }
-
-  createMainWindow().catch((error) => console.error("Failed to create main window.", error));
+// Open the default window when the app is activated
+app.on("activate", (...args) => {
+  openDefaultWindow().catch((reason) => console.error(`Failed to open default window.`, { reason, ...args }));
 });
 
-// Open the main window when the app is activated
-app.on("activate", () => {
-  openMainWindow().catch((error) => console.error("Failed to open main window.", error));
+// Open the default window when a second instance of the app is executed
+app.on("second-instance", (...args) => {
+  openDefaultWindow().catch((reason) => console.error(`Failed to open default window.`, { reason, ...args }));
 });
 
-// Open the main window when a second instance of the app is executed
-app.on("second-instance", () => {
-  openMainWindow().catch((error) => console.error("Failed to open main window.", error));
-});
-
-// Enforce security for the created web contents
+// Set the default security handlers for created web contents
 app.on("web-contents-created", (event, webContents) => {
-  secureWebContents(webContents);
+  setDefaultHandlers(webContents);
 });
 
-// Quit the app when all windows are closed
-// Note MacOS apps are typically quit with Command+Q explicitly
+// Quit the app when all windows are closed except on Mac
+// where apps are typically quit with Command+Q explicitly
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (!constants.PLATFORM_MAC) {
     app.quit();
   }
 });
+
+// Attempts to load the Vue Devtools Extension
+// Note this should fail gracefully
+async function tryLoadVueDevtoolsExtension() {
+  try {
+    if (import.meta.env.VITE_DEV_SERVER_URL !== undefined) {
+      await loadExtension(constants.VUE_DEVTOOLS_EXTENSION_ID);
+    } else {
+      await loadExtension(constants.VUE_DEVTOOLS_EXTENSION_ID, { allowFileAccess: true });
+    }
+  } catch (error) {
+    console.error("Failed to load Vue Devtools Extension.", { reason: error });
+  }
+}
+
+// Attempts to check for an application update
+// Note this should fail gracefully
+async function tryCheckForUpdate() {
+  try {
+    await checkForUpdate();
+  } catch (error) {
+    console.error("Failed to check for application update.", { reason: error });
+  }
+}

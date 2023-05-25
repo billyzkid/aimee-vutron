@@ -1,64 +1,85 @@
-import { session, app, net, LoadExtensionOptions } from "electron";
+import { app, session, net } from "electron";
+import unzip from "unzip-crx-3";
 import * as fs from "fs";
 import * as path from "path";
-import unzip from "unzip-crx-3";
 
-interface InstallExtensionOptions {
-  force?: boolean;
-  loadOptions?: LoadExtensionOptions;
-}
+const DOWNLOAD_URL = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx3&x=id%3D[EXTENSION_ID]%26uc&prodversion=${process.versions.chrome}`;
+const DOWNLOAD_FILE = path.join(app.getPath("temp"), "[EXTENSION_ID].crx");
+const INSTALL_PATH = path.join(app.getPath("userData"), "Extensions\\[EXTENSION_ID]");
 
-// ID used to install the Vue Devtools Extension
-// https://devtools.vuejs.org
-export const VUE_DEVTOOLS_EXTENSION_ID = "nhdogjmejiglipccpnnnanhbledajbpd";
+const getDownloadUrl = (extensionId: string) => DOWNLOAD_URL.replace("[EXTENSION_ID]", extensionId);
+const getDownloadFile = (extensionId: string) => DOWNLOAD_FILE.replace("[EXTENSION_ID]", extensionId);
+const getInstallPath = (extensionId: string) => INSTALL_PATH.replace("[EXTENSION_ID]", extensionId);
 
-// Installs a Chrome extension for the app
-// Note this cannot be called before the app ready event
-export async function installExtension(extensionId: string, options: InstallExtensionOptions = {}) {
-  const { force, loadOptions } = options;
+// Loads a Chrome extension, downloading and installing it if necessary
+// Note this cannot be called before the app is ready
+export default async function loadExtension(extensionId: string, options: LoadExtensionOptions = {}) {
+  const { force = false, allowFileAccess = false } = options;
 
-  let extension = session.defaultSession.getExtension(extensionId);
-
-  if (extension && force) {
-    session.defaultSession.removeExtension(extensionId);
+  if (isExtensionLoaded(extensionId)) {
+    unloadExtension(extensionId);
   }
 
-  if (!extension || force) {
-    const extensionPath = await downloadExtension(extensionId);
-    extension = await session.defaultSession.loadExtension(extensionPath, loadOptions);
+  if (force && isExtensionInstalled(extensionId)) {
+    await uninstallExtension(extensionId);
   }
 
-  return extension;
+  if (force || !isExtensionInstalled(extensionId)) {
+    await installExtension(extensionId);
+  }
+
+  return await loadExtensionInternal(extensionId, { allowFileAccess });
 }
 
-// Downloads a Chrome extension for the app
-async function downloadExtension(extensionId: string) {
-  const extensionCrxUrl = `https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&x=id%3D${extensionId}%26uc&prodversion=${process.versions.chrome}`;
-  const extensionCrxFile = path.join(app.getPath("temp"), extensionId);
-  const extensionPath = path.join(app.getPath("userData"), "Extensions", extensionId);
-
-  // Download and unzip the extension file
-  await downloadFile(extensionCrxUrl, extensionCrxFile);
-  await unzip(extensionCrxFile, extensionPath);
-
-  return extensionPath;
+function isExtensionInstalled(extensionId: string) {
+  return fs.existsSync(getInstallPath(extensionId));
 }
 
-// Downloads a URL to the specified destination file
-function downloadFile(url: string, file: string) {
-  return new Promise((resolve, reject) => {
+function isExtensionLoaded(extensionId: string) {
+  return !!session.defaultSession.getExtension(extensionId);
+}
+
+async function installExtension(extensionId: string) {
+  const downloadUrl = getDownloadUrl(extensionId);
+  const downloadFile = getDownloadFile(extensionId);
+  const installPath = getInstallPath(extensionId);
+
+  await download(downloadUrl, downloadFile);
+  await unzip(downloadFile, installPath);
+  await fs.promises.rm(downloadFile);
+
+  return installPath;
+}
+
+function uninstallExtension(extensionId: string) {
+  return fs.promises.rm(getInstallPath(extensionId), { recursive: true, force: true });
+}
+
+function loadExtensionInternal(extensionId: string, options?: Electron.LoadExtensionOptions) {
+  return session.defaultSession.loadExtension(getInstallPath(extensionId), options);
+}
+
+function unloadExtension(extensionId: string) {
+  session.defaultSession.removeExtension(extensionId);
+}
+
+function download(url: string, file: string) {
+  return new Promise<void>((resolve, reject) => {
     const request = net.request(url);
+
+    // Resolve the promise if the response is successfully
+    // written to the destination file, otherwise reject it
+    request.on("response", (response) => {
+      const readStream = response as unknown as NodeJS.ReadableStream;
+      const writeStream = fs.createWriteStream(file);
+
+      readStream.pipe(writeStream);
+      writeStream.on("error", reject);
+      writeStream.on("finish", resolve);
+    });
 
     // Reject the promise if the request fails
     request.on("error", reject);
-
-    // Attempt to write the response to the destination file
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    request.on("response", (response: any) => {
-      response.on("error", reject);
-      response.on("close", resolve);
-      response.pipe(fs.createWriteStream(file));
-    });
 
     // Send the request
     request.end();

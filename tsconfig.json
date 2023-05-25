@@ -6,8 +6,7 @@
     "strict": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "jsx": "preserve",
-    "types": ["vite/client"]
+    "jsx": "preserve"
   },
   "include": ["src", "tests"]
 }

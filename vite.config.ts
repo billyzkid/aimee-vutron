@@ -33,6 +33,9 @@ export default defineConfig(async ({ command, mode }) => {
   }
 
   return {
+    // define: {
+    //   __VUE_PROD_DEVTOOLS__: true
+    // },
     root: path.resolve("./src/renderer"),
     build: {
       outDir: path.resolve("./dist/renderer"),

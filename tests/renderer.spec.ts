@@ -11,6 +11,7 @@ import HeaderLayout from "../src/renderer/components/layout/HeaderLayout.vue";
 
 config.global.plugins = [i18n, pinia, router, vuetify];
 
+// Ensures any Vue console warnings or errors cause the test to fail
 function fail(message: string) {
   throw new Error(message);
 }
@@ -24,27 +25,27 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-test("App component", () => {
+test("Should mount the App component", () => {
   const wrapper = mount(App);
   expect(wrapper.exists()).toBe(true);
 });
 
-test("MainScreen component", () => {
+test("Should mount the MainScreen component", () => {
   const wrapper = mount(MainScreen);
   expect(wrapper.exists()).toBe(true);
 });
 
-test("SecondScreen component", () => {
+test("Should mount the SecondScreen component", () => {
   const wrapper = mount(SecondScreen);
   expect(wrapper.exists()).toBe(true);
 });
 
-test("DefaultLayout component", () => {
+test("Should mount the DefaultLayout component", () => {
   const wrapper = mount(DefaultLayout);
   expect(wrapper.exists()).toBe(true);
 });
 
-test("HeaderLayout component", () => {
+test("Should mount the HeaderLayout component", () => {
   const InjectedHeaderLayout = {
     template: "<v-app><header-layout /></v-app>",
     components: { VApp, HeaderLayout }

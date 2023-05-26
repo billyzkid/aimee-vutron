@@ -12,17 +12,10 @@ import * as path from "path";
 export default defineConfig(({ mode }) => {
   const srcDir = path.resolve("./src");
   const distDir = path.resolve("./dist");
-  const resourcesDir = path.resolve("./resources");
 
   // Environment variables imported by the app
   process.env.VITE_APP_NAME = pkg.productName;
   process.env.VITE_APP_VERSION = pkg.version;
-
-  // Note this check is needed due to process.env string coercion
-  // https://github.com/nodejs/node/issues/12126
-  if (process.env.REMOTE_DEBUGGING_PORT !== undefined) {
-    process.env.VITE_REMOTE_DEBUGGING_PORT = process.env.REMOTE_DEBUGGING_PORT;
-  }
 
   // Build options shared by the main and renderer processes
   const buildOptions: BuildOptions = {
@@ -44,7 +37,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
-      vueI18n({ include: path.join(resourcesDir, "locales/*.json") }),
+      vueI18n({
+        include: ["./resources/locales/*.json"]
+      }),
       vuetify(),
       eslint(),
       electron([

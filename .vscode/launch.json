@@ -9,7 +9,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "env": {
-        "REMOTE_DEBUGGING_PORT": "9222"
+        "VITE_REMOTE_DEBUGGING_PORT": "9222"
       }
     },
     {

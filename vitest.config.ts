@@ -17,7 +17,7 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueI18n({
-      include: "./resources/locales/*.json"
+      include: ["./resources/locales/*.json"]
     }),
     vuetify()
   ]

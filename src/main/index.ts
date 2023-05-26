@@ -13,6 +13,12 @@ if (!app.requestSingleInstanceLock()) {
   app.exit();
 }
 
+// Enable remote debugging debugging for the renderer process
+// https://github.com/electron/electron/blob/main/docs/api/command-line-switches.md
+if (import.meta.env.VITE_REMOTE_DEBUGGING_PORT !== undefined) {
+  app.commandLine.appendSwitch("remote-debugging-port", import.meta.env.VITE_REMOTE_DEBUGGING_PORT);
+}
+
 // Disable hardware acceleration
 // https://github.com/electron/electron/issues/13368
 app.disableHardwareAcceleration();

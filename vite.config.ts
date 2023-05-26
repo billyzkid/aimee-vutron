@@ -9,20 +9,22 @@ import electronRenderer from "vite-plugin-electron-renderer";
 import * as pkg from "./package.json";
 import * as path from "path";
 
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ mode }) => {
   const srcDir = path.resolve("./src");
   const distDir = path.resolve("./dist");
   const resourcesDir = path.resolve("./resources");
 
-  // Electron enviroment variables
-  // process.env.ELECTRON_ENABLE_LOGGING = "0";
-  // process.env.ELECTRON_NO_ATTACH_CONSOLE = "1";
-
-  // Vite environment variables imported by the app
+  // Environment variables imported by the app
   process.env.VITE_APP_NAME = pkg.productName;
   process.env.VITE_APP_VERSION = pkg.version;
 
-  // Vite build options shared by the main and renderer processes
+  // Note this check is needed due to process.env string coercion
+  // https://github.com/nodejs/node/issues/12126
+  if (process.env.REMOTE_DEBUGGING_PORT !== undefined) {
+    process.env.VITE_REMOTE_DEBUGGING_PORT = process.env.REMOTE_DEBUGGING_PORT;
+  }
+
+  // Build options shared by the main and renderer processes
   const buildOptions: BuildOptions = {
     target: "esnext",
     minify: mode === "production" ? "esbuild" : false,
@@ -32,12 +34,6 @@ export default defineConfig(({ command, mode }) => {
       external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.devDependencies)]
     }
   };
-
-  // Electron startup arguments used to debug the renderer process
-  const startupArgs =
-    command === "serve" && process.env.REMOTE_DEBUGGING_PORT !== undefined
-      ? [".", "--no-sandbox", `--remote-debugging-port=${process.env.REMOTE_DEBUGGING_PORT}`]
-      : undefined;
 
   return {
     // define: {
@@ -53,18 +49,20 @@ export default defineConfig(({ command, mode }) => {
       eslint(),
       electron([
         {
+          // Main configuration
+          onstart: (options) => options.startup(),
           entry: path.join(srcDir, "main"),
           vite: {
             build: { ...buildOptions, outDir: path.join(distDir, "main") }
-          },
-          onstart: (options) => options.startup(startupArgs)
+          }
         },
         {
+          // Preload configuration
+          onstart: (options) => options.reload(),
           entry: path.join(srcDir, "preload"),
           vite: {
             build: { ...buildOptions, outDir: path.join(distDir, "preload") }
-          },
-          onstart: (options) => options.reload()
+          }
         }
       ]),
       electronRenderer()

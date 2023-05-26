@@ -9,8 +9,8 @@
 </template>
 
 <style>
-  html {
+  :root {
     user-select: none;
-    overflow-y: auto !important;
+    overflow-y: auto;
   }
 </style>

@@ -6,7 +6,7 @@ import vuetify from "vite-plugin-vuetify";
 import eslint from "vite-plugin-eslint";
 import electron from "vite-plugin-electron";
 import electronRenderer from "vite-plugin-electron-renderer";
-import { productName, version, devDependencies } from "./package.json";
+import { productName, version, dependencies } from "./package.json";
 import * as path from "path";
 
 export default defineConfig(({ mode }) => {
@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
     target: "esnext",
     minify: mode === "production" ? "esbuild" : false,
     sourcemap: mode === "development" ? "inline" : false,
-    rollupOptions: mode === "development" ? { external: Object.keys(devDependencies) } : undefined,
+    rollupOptions: mode === "development" ? { external: [...Object.keys(dependencies)] } : undefined,
     emptyOutDir: mode === "production"
   };
 

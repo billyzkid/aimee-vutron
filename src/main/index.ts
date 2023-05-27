@@ -19,9 +19,9 @@ if (import.meta.env.VITE_REMOTE_DEBUGGING_PORT !== undefined) {
   app.commandLine.appendSwitch("remote-debugging-port", import.meta.env.VITE_REMOTE_DEBUGGING_PORT);
 }
 
-// Disable hardware acceleration
+// TODO: Consider disabling hardware acceleration
 // https://github.com/electron/electron/issues/13368
-app.disableHardwareAcceleration();
+//app.disableHardwareAcceleration();
 
 // Suppress the default application menu
 // https://github.com/electron/electron/issues/35512
@@ -30,8 +30,8 @@ suppressDefaultMenu();
 
 // Initialize the app when Electron is initialized
 // This registers global shortcuts and creates the main application window
-// In development, this additionally loads an extension first and opens the devtools last
-// In production, this additionally checks for an app update first
+// In development, this first loads an extension and then opens the developer tools
+// In production, this first checks for an update
 if (import.meta.env.DEV) {
   app
     .whenReady()
@@ -39,12 +39,12 @@ if (import.meta.env.DEV) {
     .then(registerGlobalShortcuts)
     .then(createMainWindow)
     .then(openDevTools)
-    .catch((reason) => console.error(`Failed to initialize application.`, { reason, mode: import.meta.env.MODE }));
+    .catch((reason) => console.error(`Failed to initialize application.`, { reason }));
 } else {
   Promise.all([app.whenReady(), tryCheckForUpdate()])
     .then(registerGlobalShortcuts)
     .then(createMainWindow)
-    .catch((reason) => console.error(`Failed to initialize application.`, { reason, mode: import.meta.env.MODE }));
+    .catch((reason) => console.error(`Failed to initialize application.`, { reason }));
 }
 
 // Open the default window when the app is activated

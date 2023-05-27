@@ -6,27 +6,25 @@ import vuetify from "vite-plugin-vuetify";
 import eslint from "vite-plugin-eslint";
 import electron from "vite-plugin-electron";
 import electronRenderer from "vite-plugin-electron-renderer";
-import * as pkg from "./package.json";
+import { productName, version, devDependencies } from "./package.json";
 import * as path from "path";
 
 export default defineConfig(({ mode }) => {
   const srcDir = path.resolve("./src");
   const distDir = path.resolve("./dist");
 
-  // Environment variables imported by the app
-  process.env.VITE_APP_NAME = pkg.productName;
-  process.env.VITE_APP_VERSION = pkg.version;
-
-  // Build options shared by the main and renderer processes
+  // Common build options
   const buildOptions: BuildOptions = {
     target: "esnext",
     minify: mode === "production" ? "esbuild" : false,
     sourcemap: mode === "development" ? "inline" : false,
-    emptyOutDir: mode === "production",
-    rollupOptions: {
-      external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.devDependencies)]
-    }
+    rollupOptions: mode === "development" ? { external: Object.keys(devDependencies) } : undefined,
+    emptyOutDir: mode === "production"
   };
+
+  // Imported environment variables (see ./src/types.d.ts)
+  process.env.VITE_APP_TITLE = mode === "production" ? productName : `${productName} (${mode})`;
+  process.env.VITE_APP_VERSION = version;
 
   return {
     // define: {

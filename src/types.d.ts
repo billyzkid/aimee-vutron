@@ -16,9 +16,4 @@ interface MainApi {
   openExternalUrl(url: string): Promise<void>;
 }
 
-interface LoadExtensionOptions extends Electron.LoadExtensionOptions {
-  force?: boolean;
-  allowFileAccess?: boolean;
-}
-
 type Permission = Parameters<Exclude<Parameters<Electron.Session["setPermissionRequestHandler"]>[0], null>>[1];

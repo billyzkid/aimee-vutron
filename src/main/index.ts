@@ -1,8 +1,8 @@
 import { app } from "electron";
+import { loadExtension } from "electron-extension-loader";
 import { suppressDefaultMenu, registerGlobalShortcuts } from "./menus";
 import { createMainWindow, openDefaultWindow, openDevTools } from "./windows";
 import { setDefaultHandlers } from "./security";
-import loadExtension from "./extensions";
 import checkForUpdate from "./updates";
 import * as constants from "./constants";
 import "./ipc";
